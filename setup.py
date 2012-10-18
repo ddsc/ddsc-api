@@ -10,11 +10,11 @@ long_description = '\n\n'.join([
 
 install_requires = [
     'Django',
+    'dikedata-api',
     'django-celery',
     'django-extensions',
     'django-nose',
     'gunicorn',
-    'lizard-map',
     'lizard-ui >= 4.0b5',
     'python-memcached',
     'raven',
