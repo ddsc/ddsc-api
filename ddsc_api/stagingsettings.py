@@ -12,5 +12,16 @@ DATABASES = {
         },
     }
 
+CASSANDRA = {
+        'servers': [
+            '10.100.235.201:9160',
+            '10.100.235.202:9160',
+            '10.100.235.203:9160',
+            '10.100.235.204:9160'
+        ],
+        'keyspace': 'ddsc',
+        'column_family': 'timeseries',
+    }
+
 # TODO: add staging gauges ID here.
 UI_GAUGES_SITE_ID = ''  # Staging has a separate one.
