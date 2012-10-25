@@ -23,5 +23,12 @@ CASSANDRA = {
         'column_family': 'timeseries',
     }
 
+RABBITMQ = {
+    'server': 'p-flod-rmq-d1.external-nens.local',
+    'vhost': 'ddsc-development',
+    'user': 'ddsc',
+    'password': 'xxxxxxxxxxxx'
+}
+
 # TODO: add staging gauges ID here.
 UI_GAUGES_SITE_ID = ''  # Staging has a separate one.
