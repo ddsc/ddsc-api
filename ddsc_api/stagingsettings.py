@@ -25,7 +25,7 @@ CASSANDRA = {
 
 RABBITMQ = {
     'server': 'p-flod-rmq-d1.external-nens.local',
-    'vhost': 'ddsc-development',
+    'vhost': 'ddsc-staging',
     'user': 'ddsc',
     'password': 'xxxxxxxxxxxx'
 }
