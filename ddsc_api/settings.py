@@ -133,11 +133,14 @@ MIDDLEWARE_CLASSES = (
 
 INSTALLED_APPS = (
     'ddsc_api',
+    'ddsc_core',
+    'dikedata_api',
     'lizard_security',
+    'rest_framework',
     'south',
     'compressor',
     'staticfiles',
-    'raven.contrib.django',
+#    'raven.contrib.django',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
