@@ -62,8 +62,8 @@ DATABASES = {
         'PASSWORD': 'xxxxxxxx',
         'HOST': 'yyyyyyyy',
         'PORT': '5432',
-        }
     }
+}
 
 # Almost always set to 1.  Django allows multiple sites in one database.
 SITE_ID = 1
@@ -129,7 +129,7 @@ MIDDLEWARE_CLASSES = (
     # Lizard security.
     'tls.TLSRequestMiddleware',
     'lizard_security.middleware.SecurityMiddleware',
-    )
+)
 
 INSTALLED_APPS = (
     'ddsc_api',
