@@ -16,6 +16,6 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
 #    url(r'^ui/', include('lizard_ui.urls')),
     url(r'^api/', include('dikedata_api.urls')),
-    )
+)
 
 urlpatterns += debugmode_urlpatterns()

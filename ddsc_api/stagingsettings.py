@@ -20,7 +20,7 @@ CASSANDRA = {
             '10.100.235.204:9160'
         ],
         'keyspace': 'ddsc',
-        'column_family': 'timeseries',
+        'batch_size': 10000,
     }
 
 RABBITMQ = {
