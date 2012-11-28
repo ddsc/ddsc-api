@@ -152,6 +152,10 @@ INSTALLED_APPS = (
     'gunicorn',
 )
 
+REST_FRAMEWORK = {
+    'FILTER_BACKEND': 'rest_framework.filters.DjangoFilterBackend'
+}
+
 # TODO: Put your real url here to configure Sentry.
 # SENTRY_DSN = 'http://some:thing@sentry.lizardsystem.nl/1'
 
