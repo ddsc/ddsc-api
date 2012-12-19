@@ -19,6 +19,7 @@ install_requires = [
     'python-memcached',
     'raven',
     'werkzeug',
+    'tslib',
     ],
 
 setup(name='ddsc-api',
