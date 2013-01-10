@@ -159,7 +159,9 @@ INSTALLED_APPS = (
 )
 
 REST_FRAMEWORK = {
-    'FILTER_BACKEND': 'rest_framework.filters.DjangoFilterBackend'
+    'FILTER_BACKEND': 'rest_framework.filters.DjangoFilterBackend',
+    'PAGINATE_BY': 10,
+    'PAGINATE_BY_PARAM': 'page_size' 
 }
 
 # TODO: Put your real url here to configure Sentry.
