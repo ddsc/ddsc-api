@@ -138,7 +138,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 INSTALLED_APPS = (
-    'lizard-security',
+    'lizard_security',
     'ddsc_api',
     'ddsc_core',
     'dikedata_api',
