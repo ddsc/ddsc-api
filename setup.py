@@ -11,6 +11,7 @@ long_description = '\n\n'.join([
 install_requires = [
     'Django',
     'dikedata-api',
+    'ddsc-site',
     'django-celery',
     'django-extensions',
     'django-nose',

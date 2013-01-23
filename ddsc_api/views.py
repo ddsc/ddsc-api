@@ -11,7 +11,6 @@ class Root(APIView):
     def get(self, request, format=None):
         response = {
             'datasets': reverse('dataset-list', request=request),
-            'locationgroups': reverse('locationgroup-list', request=request),
             'locations': reverse('location-list', request=request),
             'timeseries': reverse('timeseries-list', request=request),
             'layers': reverse('layers-list', request=request),
