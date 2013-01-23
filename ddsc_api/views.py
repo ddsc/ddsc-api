@@ -1,21 +1,27 @@
 # (c) Nelen & Schuurmans.  MIT licensed, see LICENSE.rst.
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
+from __future__ import absolute_import, division
 
-from django.utils.translation import ugettext as _
-# from django.core.urlresolvers import reverse
-# from lizard_map.views import MapView
-# from lizard_ui.views import UiView
-
-# from ddsc_api import models
+from rest_framework.reverse import reverse
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 
-# class TodoView(UiView):
-#     """Simple view without a map."""
-#     template_name = 'ddsc_api/todo.html'
-#     page_title = _('TODO view')
+class Root(APIView):
+    def get(self, request, format=None):
+        response = {
+            'datasets': reverse('dataset-list', request=request),
+            'locationgroups': reverse('locationgroup-list', request=request),
+            'locations': reverse('location-list', request=request),
+            'timeseries': reverse('timeseries-list', request=request),
+            'layers': reverse('layers-list', request=request),
+        }
 
-
-# class Todo2View(MapView):
-#     """Simple view with a map."""
-#     template_name = 'ddsc_api/todo2.html'
-#     page_title = _('TODO 2 view')
+        user = getattr(request, 'user', None)
+        if user is not None and user.is_superuser:
+            response.update({
+                'users': reverse('user-list', request=request),
+                'groups': reverse('usergroup-list', request=request),
+                'roles': reverse('role-list', request=request),
+            })
+        return Response(response)
