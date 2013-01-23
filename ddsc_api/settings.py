@@ -142,11 +142,15 @@ INSTALLED_APPS = (
     'ddsc_api',
     'ddsc_core',
     'dikedata_api',
+    'ddsc_site',
+    'lizard_ui',
+    'lizard_map',
+    'lizard_maptree',
+    'lizard_wms',
     'rest_framework',
     'south',
     'compressor',
     'staticfiles',
-#    'raven.contrib.django',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -161,7 +165,7 @@ INSTALLED_APPS = (
 REST_FRAMEWORK = {
     'FILTER_BACKEND': 'rest_framework.filters.DjangoFilterBackend',
     'PAGINATE_BY': 10,
-    'PAGINATE_BY_PARAM': 'page_size' 
+    'PAGINATE_BY_PARAM': 'page_size'
 }
 
 # TODO: Put your real url here to configure Sentry.
