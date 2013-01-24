@@ -1,4 +1,4 @@
-from ddsc_api.settings import *
+from ddsc_api.settings import *  # NOQA
 
 DATABASES = {
     # Changed server from production to staging
@@ -23,18 +23,11 @@ CASSANDRA = {
     'batch_size': 10000,
     }
 
-RABBITMQ = {
-    'server': 'p-flod-rmq-d1.external-nens.local',
-    'vhost': 'ddsc-staging',
-    'user': 'ddsc',
-    'password': 'xxxxxxxxxxxx'
-}
-
 # TODO: add staging gauges ID here.
 UI_GAUGES_SITE_ID = ''  # Staging has a separate one.
 
 try:
-    from ddsc_api.localstagingsettings import *
+    from ddsc_api.localstagingsettings import *  # NOQA
     # For local staging overrides (DB passwords, for instance)
 except ImportError:
     pass
