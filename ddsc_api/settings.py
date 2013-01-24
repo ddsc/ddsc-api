@@ -53,7 +53,8 @@ MANAGERS = ADMINS
 
 # TODO: Switch this to the real production database.
 # ^^^ 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-# In case of geodatabase, prepend with: django.contrib.gis.db.backends.(postgis)
+# In case of geodatabase, prepend with:
+# django.contrib.gis.db.backends.(postgis)
 DATABASES = {
     'default': {
         'NAME': 'ddsc_api',
@@ -160,6 +161,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'gunicorn',
+    'treebeard',
 )
 
 REST_FRAMEWORK = {
@@ -176,7 +178,7 @@ UI_GAUGES_SITE_ID = ''  # Staging has a separate one.
 
 
 try:
-    from ddsc_api.localproductionsettings import *
+    from ddsc_api.localproductionsettings import *  # NOQA
     # For local production overrides (DB passwords, for instance)
 except ImportError:
     pass
