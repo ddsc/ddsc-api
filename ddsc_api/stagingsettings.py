@@ -26,6 +26,10 @@ CASSANDRA = {
 # TODO: add staging gauges ID here.
 UI_GAUGES_SITE_ID = ''  # Staging has a separate one.
 
+INSTALLED_APPS += (
+    'raven.contrib.django',
+)
+
 try:
     from ddsc_api.localstagingsettings import *  # NOQA
     # For local staging overrides (DB passwords, for instance)
