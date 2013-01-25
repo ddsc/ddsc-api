@@ -9,6 +9,8 @@
 import os
 import tempfile
 
+import django.conf.global_settings as DEFAULT_SETTINGS
+
 from lizard_ui.settingshelper import setup_logging
 from lizard_ui.settingshelper import STATICFILES_FINDERS
 
@@ -176,6 +178,9 @@ REST_FRAMEWORK = {
 # TODO: add gauges ID here. Generate one separately for the staging, too.
 UI_GAUGES_SITE_ID = ''  # Staging has a separate one.
 
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    'django.core.context_processors.request',  # treebeard
+)
 
 try:
     from ddsc_api.localproductionsettings import *  # NOQA
