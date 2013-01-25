@@ -13,6 +13,7 @@ class Root(APIView):
             'datasets': reverse('dataset-list', request=request),
             'locations': reverse('location-list', request=request),
             'timeseries': reverse('timeseries-list', request=request),
+            'parameters': reverse('parameter-list', request=request),
             'layers': reverse('layers-list', request=request),
         }
 
