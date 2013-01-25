@@ -23,4 +23,9 @@ server {
         proxy_redirect off;
         proxy_pass http://localhost:${serverconfig:gunicorn-port};
     }
+
+    location /api/ {
+        add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Headers X-Requested-With;
+    }
 }
