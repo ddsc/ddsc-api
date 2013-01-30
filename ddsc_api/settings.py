@@ -133,6 +133,7 @@ MIDDLEWARE_CLASSES = (
     # Lizard security.
     'tls.TLSRequestMiddleware',
     'lizard_security.middleware.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -155,6 +156,7 @@ INSTALLED_APPS = (
     'compressor',
     'staticfiles',
     'django_extensions',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -171,6 +173,8 @@ REST_FRAMEWORK = {
     'PAGINATE_BY': 10,
     'PAGINATE_BY_PARAM': 'page_size'
 }
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 # TODO: Put your real url here to configure Sentry.
 # SENTRY_DSN = 'http://some:thing@sentry.lizardsystem.nl/1'

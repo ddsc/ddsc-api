@@ -15,6 +15,7 @@ install_requires = [
     'django-celery',
     'django-extensions',
     'django-nose',
+    'django-cors-headers',
     'gunicorn',
     'lizard-ui >= 4.0b5',
     'python-memcached',
