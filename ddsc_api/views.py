@@ -14,7 +14,8 @@ class Root(APIView):
             'locations': reverse('location-list', request=request),
             'timeseries': reverse('timeseries-list', request=request),
             'parameters': reverse('parameter-list', request=request),
-            'layers': reverse('layers-list', request=request),
+            'layers': reverse('layer-list', request=request),
+            'collages': reverse('collage-list', request=request),
         }
 
         user = getattr(request, 'user', None)
