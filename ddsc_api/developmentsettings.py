@@ -32,6 +32,17 @@ DATABASES = {
         }
     }
 
+CASSANDRA = {
+    'servers': [
+        '10.100.235.201:9160',
+        '10.100.235.202:9160',
+        '10.100.235.203:9160',
+        '10.100.235.204:9160'
+        ],
+    'keyspace': 'ddsc',
+    'batch_size': 10000,
+    }
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
