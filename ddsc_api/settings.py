@@ -68,6 +68,8 @@ DATABASES = {
     }
 }
 
+POSTGIS_VERSION = (1,5,3) # ja een tuple
+
 # Almost always set to 1.  Django allows multiple sites in one database.
 SITE_ID = 1
 
