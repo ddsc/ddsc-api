@@ -1,2 +1,2 @@
-from ddsc_management.settings import *
+from ddsc_api.settings import *
 # Note: public repo, use localsettings!
