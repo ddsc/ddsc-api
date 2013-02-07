@@ -19,7 +19,6 @@ class Root(APIView):
             ('logicalgroups', reverse('logicalgroup-list', request=request)),
             ('layers', reverse('layer-list', request=request)),
             ('collages', reverse('collage-list', request=request)),
-            ('collageitems', reverse('collageitem-list', request=request)),
             ])
 
         user = getattr(request, 'user', None)
