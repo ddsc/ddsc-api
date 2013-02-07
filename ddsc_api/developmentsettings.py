@@ -1,3 +1,5 @@
+import os
+
 from lizard_ui.settingshelper import setup_logging
 
 from ddsc_api.settings import *
@@ -24,15 +26,26 @@ DATABASES = {
         'NAME': 'ddsc_api',
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'USER': 'buildout',
-        'PASSWORD': 'xxxxxxxx',
+        'PASSWORD': 'buildout',
         'HOST': '',  # empty string for localhost.
         'PORT': '',  # empty string for default.
         }
     }
 
+CASSANDRA = {
+    'servers': [
+        '10.100.235.201:9160',
+        '10.100.235.202:9160',
+        '10.100.235.203:9160',
+        '10.100.235.204:9160'
+        ],
+    'keyspace': 'ddsc',
+    'batch_size': 10000,
+    }
 
-try:
-    from ddsc_api.localsettings import *
-    # For local dev overrides.
-except ImportError:
-    pass
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BUILDOUT_DIR, 'var', 'cache'),
+    }
+}
