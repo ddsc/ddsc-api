@@ -18,6 +18,7 @@ install_requires = [
     'django-cors-headers',
     'gunicorn',
     'lizard-ui >= 4.0b5',
+    'python-magic',
     'python-memcached',
     'raven',
     'werkzeug',
