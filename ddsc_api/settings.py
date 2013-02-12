@@ -166,6 +166,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 # TODO: Put your real url here to configure Sentry.
 # override me in localsettings
