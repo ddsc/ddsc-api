@@ -130,7 +130,7 @@ MIDDLEWARE_CLASSES = (
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'ddsc_core.backends.PermissionBackend',
+    'lizard_security.backends.DDSCPermissionBackend',
 )
 
 INSTALLED_APPS = (
@@ -163,9 +163,12 @@ INSTALLED_APPS = (
 
 REST_FRAMEWORK = {
     'FILTER_BACKEND': 'rest_framework.filters.DjangoFilterBackend',
+    'PAGINATE_BY': 10,
+    'PAGINATE_BY_PARAM': 'page_size'
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 # TODO: Put your real url here to configure Sentry.
 # override me in localsettings
