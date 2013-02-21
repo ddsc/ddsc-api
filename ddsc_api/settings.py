@@ -169,9 +169,13 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
+# Package corsheaders offers either ALLOW_ALL, or a whitelist.
+# In the future, we might want to pass the request header Origin as-is
+# in the response.
 CORS_ORIGIN_WHITELIST = [
     '127.0.0.1',
     '192.168.56.101',
+    '33.33.33.10',
     'dijkdata.nl',
     'test.dijkdata.nl',
 ]
