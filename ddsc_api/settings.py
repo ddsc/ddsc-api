@@ -176,6 +176,8 @@ CORS_ORIGIN_WHITELIST = [
     'test.dijkdata.nl',
 ]
 
+SSO_ENABLED = False
+
 # TODO: Put your real url here to configure Sentry.
 # override me in localsettings
 SENTRY_DSN = None
