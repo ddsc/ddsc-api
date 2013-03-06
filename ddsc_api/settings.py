@@ -162,6 +162,15 @@ INSTALLED_APPS = (
 )
 
 REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'dikedata_api.parsers.SimpleFileUploadParser',
+    ),
     'FILTER_BACKEND': 'rest_framework.filters.DjangoFilterBackend',
     'PAGINATE_BY': 10,
     'PAGINATE_BY_PARAM': 'page_size'
