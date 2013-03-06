@@ -49,3 +49,8 @@ CACHES = {
         'LOCATION': os.path.join(BUILDOUT_DIR, 'var', 'cache'),
     }
 }
+
+try:
+    from ddsc_api.localsettings import *  # NOQA
+except ImportError:
+    pass
