@@ -124,6 +124,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Lizard security.
     'tls.TLSRequestMiddleware',
+    'dikedata_api.middleware.AuthenticationMiddleware',
     'lizard_security.middleware.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 )
