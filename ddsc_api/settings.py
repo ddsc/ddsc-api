@@ -177,6 +177,8 @@ REST_FRAMEWORK = {
     'PAGINATE_BY_PARAM': 'page_size'
 }
 
+APPEND_SLASH = False
+
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 # Package corsheaders offers either ALLOW_ALL, or a whitelist.
