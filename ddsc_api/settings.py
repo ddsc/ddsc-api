@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'gunicorn',
     'treebeard',
     'raven.contrib.django',
+    'haystack',
 )
 
 REST_FRAMEWORK = {
@@ -192,6 +193,13 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 SSO_ENABLED = False
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://127.0.0.1:8080/solr'
+    },
+}
 
 # TODO: Put your real url here to configure Sentry.
 # override me in localsettings

@@ -12,6 +12,7 @@ install_requires = [
     'Django',
     'dikedata-api',
     'ddsc-site',
+    'ddsc-logging',
     'django-extensions',
     'django-nose',
     'django-cors-headers',
