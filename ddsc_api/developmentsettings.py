@@ -50,6 +50,10 @@ CACHES = {
     }
 }
 
+# Enable realtime updating of the index in development.
+# In production this is done by an hourly cronjob.
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
 try:
     from ddsc_api.localsettings import *  # NOQA
 except ImportError:
