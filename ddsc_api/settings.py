@@ -71,12 +71,12 @@ USE_TZ = True
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'nl-NL'
+LANGUAGE_CODE = 'en-US'
 # For at-runtime language switching.  Note: they're shown in reverse order in
 # the interface!
 LANGUAGES = (
-#    ('en', 'English'),
-    ('nl', 'Nederlands'),
+    ('en', 'English'),
+#    ('nl', 'Nederlands'),
 )
 # If you set this to False, Django will make some optimizations so as not to
 # load the internationalization machinery.
