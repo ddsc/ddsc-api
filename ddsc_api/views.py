@@ -12,6 +12,7 @@ from rest_framework.response import Response
 class Root(APIView):
     def get(self, request, format=None):
         response = OrderedDict([
+            ('alarms', reverse('alarm_active-list', request=request)),
             ('datasets', reverse('dataset-list', request=request)),
             ('locations', reverse('location-list', request=request)),
             ('timeseries', reverse('timeseries-list', request=request)),
