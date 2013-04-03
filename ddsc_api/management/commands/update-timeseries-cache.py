@@ -3,9 +3,6 @@ from ddsc_core.models import Timeseries, DataStore
 from datetime import timedelta
 
 
-COLNAME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
-
-
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
@@ -39,9 +36,13 @@ class Command(BaseCommand):
             ts.first_value_timestamp = first_store
             ts.latest_value_timestamp = last_store
             if ts.value_type == Timeseries.ValueType.INTEGER:
-                ts.latest_value_number = int(float(last_store_value))
+                ts.latest_value_number = None
+                if last_store_value:
+                    ts.latest_value_number = int(float(last_store_value))
             if ts.value_type == Timeseries.ValueType.FLOAT:
-                ts.latest_value_number = float(last_store_value)
+                ts.latest_value_number = None
+                if last_store_value:
+                    ts.latest_value_number = float(last_store_value)
             if ts.value_type == Timeseries.ValueType.TEXT:
                 ts.latest_value_text = last_store_value
             ts.save()
