@@ -16,13 +16,13 @@ class Root(APIView):
             ('datasets', reverse('dataset-list', request=request)),
             ('locations', reverse('location-list', request=request)),
             ('timeseries', reverse('timeseries-list', request=request)),
-            ('parameters', reverse('parameter-list', request=request)),
             ('logicalgroups', reverse('logicalgroup-list', request=request)),
             ('layers', reverse('layer-list', request=request)),
             ('collages', reverse('collage-list', request=request)),
             ('collageitems', reverse('collageitem-list', request=request)),
             ('workspaces', reverse('workspace-list', request=request)),
             ('workspaceitems', reverse('workspaceitem-list', request=request)),
+            ('sources', reverse('source-list', request=request)),
         ])
 
         user = getattr(request, 'user', None)
