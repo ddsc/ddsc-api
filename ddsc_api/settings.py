@@ -218,6 +218,8 @@ TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
 # In high load environments, this should be done by an hourly cronjob.
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
+AUTH_PROFILE_MODULE = 'ddsc_site.UserProfile'
+
 try:
     # For local production overrides (DB passwords, for instance)
     from ddsc_api.localsettings import *  # NOQA
