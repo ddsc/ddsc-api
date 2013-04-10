@@ -4,9 +4,18 @@ from __future__ import absolute_import, division
 
 from collections import OrderedDict
 
+from django.views.generic import TemplateView
+
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
+
+class ManagementView(TemplateView):
+    template_name = 'ddsc_api/index.html'
+
+    def dispatch(self, *args, **kwargs):
+        return super(ManagementView, self).dispatch(*args, **kwargs)
 
 
 class Root(APIView):

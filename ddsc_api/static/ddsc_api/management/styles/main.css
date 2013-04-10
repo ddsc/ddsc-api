@@ -1,0 +1,408 @@
+body {
+  /*padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+  /*fallback*/
+  background-image: url('../images/cardboard_flat_white.png');
+  /* image with opacity layer */
+  background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('../images/cardboard_flat_white.png');
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('../images/cardboard_flat_white.png');
+  background-image: -o-linear-gradient(top, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('../images/cardboard_flat_white.png');
+  background-image: linear-gradient(top, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('../images/cardboard_flat_white.png');
+}
+
+/* Will be compiled down to a single stylesheet with your sass files */
+a {
+  cursor: pointer;
+}
+
+#content {
+  min-height: 700px; /*prefent lizard-logo on top of page*/
+}
+
+div#brand {
+  display: block;
+  float: left;
+  margin: 10px 23px 10px;
+  width: 72px;
+  height: 21px;
+  background-image: url('../images/ddsc-logo-bw-nav.png');
+  background-position: 0 -18px;
+  background-repeat: no-repeat;
+  -o-transition: background 0.2s ease-out;
+  -ms-transition: background 0.2s ease-out;
+  -moz-transition: background 0.2s ease-out;
+  -webkit-transition: background 0.2s ease-out;
+  transition: background 0.2s ease-out;
+}
+div#brand:hover {
+  background-position: 0 5px;
+  -o-transition: background 0.2s ease-in;
+  -ms-transition: background 0.2s ease-in;
+  -moz-transition: background-position 0.2s ease-in;
+  -webkit-transition: background 0.2s ease-in;
+  transition: background 0.2s ease-in;
+}
+
+.subhead img {
+  margin:auto;
+  display:block;
+}
+
+.footer {
+  /*background-color: #fff;*/
+}
+.footer span {
+  color: #ccc;
+  font-size: .7em;
+  padding: 10px;
+}
+
+.footer span a {
+  color: #555;
+  text-decoration: none;
+  filter: gray; /* IE6-9 */
+  filter: url(filters.svg#grayscale);
+  -webkit-filter: grayscale(1);
+  filter: grayscale(1);
+  -o-transition: filter 1s ease-out opacity 1s ease-out;
+  -ms-transition: filter 1s ease-out opacity 1s ease-out;
+  -moz-transition: filter 1s ease-out opacity 1s ease-out;
+  -webkit-transition: filter 1s ease-out opacity 1s ease-out;
+  transition: filter 1s ease-out opacity 1s ease-out;
+}
+
+.footer span a:hover{
+  filter: none;
+  -webkit-filter: grayscale(0);
+  text-decoration: none;
+}
+
+.jumbotron {
+  position: relative;
+  padding: 60px 0 0;
+  margin: 20px 0px 0px 0px;
+  color: white;
+  text-align: left;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .4), 0 0 30px rgba(0, 0, 0, .075);
+  background: #020031;
+  background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,#0b3564), color-stop(100%,#114c92));
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020031', endColorstr='#6d3353',GradientType=1 );
+  box-shadow: inset 0 3px 7px rgba(0, 0, 0, .2), inset 0 -3px 7px rgba(0, 0, 0, .2);
+
+}
+.jumbotron .container {
+  padding: 0px 20px 0px 20px;
+}
+
+.jumbotron h1 { font-size: 40px; }
+
+.jumbotron::after {
+  content: '';
+  display: block;
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: url(../images/jumbotron-pattern.png) repeat center center;
+  opacity: .4;
+}
+
+
+#threecol-wrapper {
+  background: -moz-linear-gradient(top, rgba(219,219,219,1) 0%, rgba(206,206,206,0.91) 9%, rgba(230,230,230,0.01) 99%, rgba(230,230,230,0) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(219,219,219,1)), color-stop(9%,rgba(206,206,206,0.91)), color-stop(99%,rgba(230,230,230,0.01)), color-stop(100%,rgba(230,230,230,0))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(219,219,219,1) 0%,rgba(206,206,206,0.91) 9%,rgba(230,230,230,0.01) 99%,rgba(230,230,230,0) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(219,219,219,1) 0%,rgba(206,206,206,0.91) 9%,rgba(230,230,230,0.01) 99%,rgba(230,230,230,0) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(219,219,219,1) 0%,rgba(206,206,206,0.91) 9%,rgba(230,230,230,0.01) 99%,rgba(230,230,230,0) 100%); /* IE10+ */
+  background: linear-gradient(to bottom, rgba(219,219,219,1) 0%,rgba(206,206,206,0.91) 9%,rgba(230,230,230,0.01) 99%,rgba(230,230,230,0) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dbdbdb', endColorstr='#00e6e6e6',GradientType=0 ); /* IE6-9 */
+}
+#threecol-wrapper #leftpane{
+  padding:20px;
+
+  outline-right: 1px solid #d6d6d6;
+  border-right: 1px solid #fefefe;
+}
+#threecol-wrapper #midpane{
+  padding:20px;
+  outline-right: 1px solid #d6d6d6;
+  border-right: 1px solid #fefefe;
+}
+#threecol-wrapper #midpane span img, #threecol-wrapper #rightpane span img{
+  padding: 5px;
+}
+#threecol-wrapper #rightpane{
+  padding:20px;
+
+}
+#threecol-wrapper h3 {
+  /*font: normal 200 21px/1.2 Pill, "Helvetica Neue", Helvetica, sans-serif;*/
+  font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 300;
+}
+
+
+/************ BOOTSTRAP OVERRIDES ************/
+.navbar {
+  z-index: 1500;
+}
+.navbar-inner{
+  background: rgb(23,127,140); /* Old browsers */
+  background: -moz-linear-gradient(top, rgba(23,127,140,1) 0%, rgba(17,94,103,1) 100%) !important; /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(23,127,140,1)), color-stop(100%,rgba(17,94,103,1))) !important; /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* IE10+ */
+  background: linear-gradient(to bottom, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#177f8c', endColorstr='#115e67',GradientType=0 ) !important; /* IE6-9 */
+}
+.navbar-inverse .nav li.dropdown.open > .dropdown-toggle, .navbar-inverse .nav li.dropdown.active > .dropdown-toggle, .navbar-inverse .nav li.dropdown.open.active > .dropdown-toggle {
+  color: #ffffff;
+  background: rgb(23,127,140) !important; /* Old browsers */
+  background: -moz-linear-gradient(top, rgba(23,127,140,1) 0%, rgba(17,94,103,1) 100%) !important; /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(23,127,140,1)), color-stop(100%,rgba(17,94,103,1))) !important; /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* IE10+ */
+  background: linear-gradient(to bottom, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#177f8c', endColorstr='#115e67',GradientType=0 ) !important; /* IE6-9 */
+}
+
+.btn-navbar{
+  color: #ffffff;
+  background: rgb(23,127,140) !important; /* Old browsers */
+  background: -moz-linear-gradient(top, rgba(23,127,140,1) 0%, rgba(17,94,103,1) 100%) !important; /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(23,127,140,1)), color-stop(100%,rgba(17,94,103,1))) !important; /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* IE10+ */
+  background: linear-gradient(to bottom, rgba(23,127,140,1) 0%,rgba(17,94,103,1) 100%) !important; /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#177f8c', endColorstr='#115e67',GradientType=0 ) !important; /* IE6-9 */
+}
+.navbar-inverse .nav-collapse .dropdown-menu a:hover {
+  background-color: #d9d9d9 !important;
+}
+.navbar .nav-collapse .nav > li > a:hover, .navbar-inverse .nav-collapse .dropdown-menu a:hover {
+  color: #ffffff !important;
+  text-decoration: none !important;
+  background-color: #0088cc !important;
+  background-color: #0081c2 !important;
+  background-image: -moz-linear-gradient(top, #0088cc, #0077b3) !important;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3)) !important;
+  background-image: -webkit-linear-gradient(top, #0088cc, #0077b3) !important;
+  background-image: -o-linear-gradient(top, #0088cc, #0077b3) !important;
+  background-image: linear-gradient(to bottom, #0088cc, #0077b3) !important;
+  background-repeat: repeat-x !important;
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0) !important;
+}
+.navbar-inverse .nav-collapse .navbar-form, .navbar-inverse .nav-collapse .navbar-search {
+  border-top-color: #167884 !important;
+  border-bottom-color: #167884 !important;
+}
+
+.modal {
+  width: 60%;
+}
+
+.modal-backdrop, .modal-backdrop.fade.in {
+  opacity: 0.3;
+}
+
+.popover{
+  overflow: auto;
+  height: 300px;
+}
+
+.popover-content{
+  padding:0;
+}
+
+
+#demo{
+  position: relative;
+  /* margin-top: 20px; */
+}
+
+.group {
+  margin-bottom: 1em;
+}
+
+.axis {
+  font: 10px sans-serif;
+  position: fixed;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.axis text {
+  -webkit-transition: fill-opacity 250ms linear;
+}
+
+.axis path {
+  display: none;
+}
+
+.axis line {
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis.top {
+  background-image: linear-gradient(top, #fff 0%, rgba(255,255,255,0) 100%);
+  background-image: -o-linear-gradient(top, #fff 0%, rgba(255,255,255,0) 100%);
+  background-image: -moz-linear-gradient(top, #fff 0%, rgba(255,255,255,0) 100%);
+  background-image: -webkit-linear-gradient(top, #fff 0%, rgba(255,255,255,0) 100%);
+  background-image: -ms-linear-gradient(top, #fff 0%, rgba(255,255,255,0) 100%);
+  top: 0px;
+  padding: 0 0 24px 0;
+}
+
+.axis.bottom {
+  background-image: linear-gradient(bottom, #fff 0%, rgba(255,255,255,0) 100%);
+  background-image: -o-linear-gradient(bottom, #fff 0%, rgba(255,255,255,0) 100%);
+  background-image: -moz-linear-gradient(bottom, #fff 0%, rgba(255,255,255,0) 100%);
+  background-image: -webkit-linear-gradient(bottom, #fff 0%, rgba(255,255,255,0) 100%);
+  background-image: -ms-linear-gradient(bottom, #fff 0%, rgba(255,255,255,0) 100%);
+  bottom: 0px;
+  padding: 24px 0 0 0;
+}
+
+.horizon {
+  border-bottom: solid 1px #000;
+  overflow: hidden;
+  position: relative;
+}
+
+.horizon {
+  border-top: solid 1px #000;
+  border-bottom: solid 1px #000;
+}
+
+.horizon + .horizon {
+  border-top: none;
+}
+
+.horizon canvas {
+  display: block;
+}
+
+.horizon .title,
+.horizon .value {
+  bottom: 0;
+  line-height: 30px;
+  margin: 0 6px;
+  position: absolute;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+  white-space: nowrap;
+}
+
+.horizon .title {
+  left: 0;
+}
+
+.horizon .value {
+  right: 0;
+}
+
+.line {
+  background: #000;
+  z-index: 2;
+}
+
+
+.workspace-item {
+  margin-top: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.workspace-item h5 {
+  text-decoration: none;
+  text-overflow: ellipsis;
+  padding: 0;
+  margin: 0;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  height: 23px;
+  color: #0084B4;
+}
+
+ul.workspace-actions, ul.workspace-actions li {
+
+  list-style: none;
+  cursor: pointer;
+  display:inline;
+}
+ul.workspace-actions li {
+
+}
+
+
+/**
+ * Turn mouse cursor in a spinner on Ajax requests.
+ *
+ * @see utilities.js
+ */
+html.busy, html.busy * {
+  cursor: wait !important;
+}
+
+.leaflet-control-zoom-fullscreen { background-image: url('../images/icon-fullscreen.png'); }
+
+/** Leaflet overrrides
+**/
+
+
+.leaflet-popup-content ul{
+  list-style: none;
+}
+
+
+
+
+ul.homepage-list{
+  padding: 3px;
+  margin: 0;
+  height: 67px;
+  overflow-y: auto;
+}
+
+ul.homepage-list li{
+  vertical-align: middle;
+  list-style: none;
+  padding: 1;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  overflow: hidden;
+}
+ul.homepage-list li .icon-chevron-right {
+  margin: 25px;
+  color: #ccc;
+}
+ul.homepage-list li.odd{
+  background-color: #f7f7f7;
+}
+div.odd {
+  background-color: #f7f7f7;
+}
+
+#homepage-searchresults {
+  margin-top: -20px;
+}
+
+ul#homepage-livestream li {
+  padding: 10px;
+  height: 50px;
+
+}
+.spacer {
+  margin-top: 15px; /* define margin as you see fit */
+}
+
+.featureInfo {
+  width: 200px !important;
+}
