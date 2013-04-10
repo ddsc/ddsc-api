@@ -33,6 +33,7 @@
 
     <script src={{ STATIC_URL }}ddsc_api/management/scripts/location.js></script>
     <script src={{ STATIC_URL }}ddsc_api/management/scripts/logicalgroup.js></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/alarms.js></script>
 
 
     <div id="header">
@@ -71,10 +72,10 @@
         width: "100%",
         //margin: "10",
         height: "700",
-        selectedTab: 4,
+        selectedTab: 0,
         tabs: [{
           title: "Alarmen",
-          pane: "hoi"
+          pane: alarmPage
         },
         {
           title: "Uploaden",
