@@ -17,6 +17,7 @@ install_requires = [
     'django-nose',
     'django-cors-headers',
     'gunicorn',
+    'lxml >= 3.0',
     'lizard-ui >= 4.0b5',
     'python-magic',
     'python-memcached',
