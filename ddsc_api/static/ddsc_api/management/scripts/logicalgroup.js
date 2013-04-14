@@ -58,7 +58,7 @@ var logicalGroupTree = isc.TreeGrid.create({
 
         var parent_ids = []
         for (var i=0; i<json_data.parents.length; i++) {
-          parent_ids.push(json_data.parents[i].parent);
+          parent_ids.push(json_data.parents[i].parent_id);
         }
         json_data.parents = parent_ids;
         logicalGroupForm.setData(json_data);
@@ -89,7 +89,7 @@ var logicalGroupForm = isc.DynamicForm.create({
         recordXPath: "results",
         dataURL: "http://33.33.33.10:8001/api/v1/logicalgroups/",
         fields:[
-          {name: 'id', title: 'iD', type: 'text', primaryKey: true},
+          {name: 'id', title: 'iD', primaryKey: true},
           {name: 'name', title: 'Name'}
         ]
       }),
@@ -189,10 +189,9 @@ var saveLogicalGroup = function() {
   var timeseries = timeseriesSelectionGrid.getData();
   //var parents = parentSelectionGrid.getData();
 
-
   var parents = [];
   for (var i=0; i<data.parents.length; i++) {
-    parents.push({parent: 1*data.parents[i]});
+    parents.push({parent: data.parents[i]});
   }
   data.parents = parents;
 
@@ -218,10 +217,11 @@ var saveLogicalGroup = function() {
         var data = isc.JSON.decode(data);
         logicalGroupForm.setData(data);
         timeseriesSelectionGrid.setData(data.alarm_item_set);
+        logicalGroupTree.fetchData({test: timestamp()}); //force new fetch with timestamp
 
       } else if (rpcResponse.httpResponseCode == 201) {
         console.log('aanmaken nieuw object gelukt');
-        data = isc.JSON.decode(data);
+        var data = isc.JSON.decode(data);
         logicalGroupForm.setData(data);
         timeseriesSelectionGrid.setData(data.alarm_item_set);
 
