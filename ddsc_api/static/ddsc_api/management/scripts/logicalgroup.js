@@ -6,7 +6,8 @@ var logicalGroupDS = isc.DataSource.create({
     {name: 'id', title: 'Id', type: 'text', canEdit: false},
     {name: 'url', title: 'Url', type: 'text', canEdit: false, primaryKey: true},
     {name: 'parents', title: 'Parent', type: 'text', foreignKey: 'url', rootValue: 'root'},
-    {name: 'name', title: 'Name'}
+    {name: 'name', title: 'Naam'},
+    {name: 'owner', title: 'Eigenaar'}
   ],
   transformResponse: function(dsResponse) {
     var json_data = isc.JSON.decode(dsResponse.data);
@@ -45,6 +46,9 @@ var logicalGroupTree = isc.TreeGrid.create({
     },
     disableCacheSync: true
   },
+  fields:[
+    { name: 'name', formatCellValue: "return value + '  (' + record.owner + ')'" }
+  ],
   rowClick: function(record) {
     RPCManager.sendRequest({
       actionURL: record.url,
@@ -62,6 +66,7 @@ var logicalGroupTree = isc.TreeGrid.create({
         }
         json_data.parents = parent_ids;
         logicalGroupForm.setData(json_data);
+        logicalGroupForm.setErrors([]);
       }
     });
   }
@@ -78,7 +83,23 @@ var logicalGroupForm = isc.DynamicForm.create({
     {name: "id", title:"id", type: 'integer', canEdit: false},
     {name: "url", title: "Url", canEdit: false /*editorType: 'hiddenField'*/},
     {name: "name", width: "*"},
-    {name: "owner", width: "*"},
+    {name: "owner", type: "combo",
+      width: "*",
+      displayField: "name",
+      valueField: "name",
+      optionDataSource: isc.DataSource.create({
+        dataFormat: 'json',
+        recordXPath: "results",
+        params: {
+          page_size: 1000
+        },
+        dataURL: "http://33.33.33.10:8001/api/v1/dataowner/",
+        fields:[
+          {name: 'id', title: 'iD', primaryKey: true},
+          {name: 'name', title: 'Name'}
+        ]
+      })
+    },
     {name: "description", type: 'textArea', width: "*"},
     {
       name: "parents",
@@ -182,13 +203,14 @@ var lgTimeseries = isc.ListGrid.create({
 
 //#####################################################################################################################
 
-var saveLogicalGroup = function() {
+var saveLogicalGroup = function(saveAsNew) {
   //todo: validation
 
   var data = logicalGroupForm.getData();
   var timeseries = timeseriesSelectionGrid.getData();
   //var parents = parentSelectionGrid.getData();
 
+  //todo: bug with parent field in post
   var parents = [];
   for (var i=0; i<data.parents.length; i++) {
     parents.push({parent: data.parents[i]});
@@ -201,10 +223,24 @@ var saveLogicalGroup = function() {
   }
   data.timeseries = timeseries_ids;
 
+  if (saveAsNew || !data.id) {
+    //logicalGroupForm.setValue('id', null);
+    //logicalGroupForm.setValue('url', null);
+    delete data.id;
+    delete data.url;
+    //todo: set alarmItem id's on null
+    var method = 'POST';
+    var url = "http://33.33.33.10:8001/api/v1/logicalgroups";
+  } else {
+    var method = 'PUT';
+    var url = data.url;
+  }
+  alarmForm.setErrors([]);
+
 
   RPCManager.sendRequest({
-    actionURL: data.url,
-    httpMethod: 'PUT',
+    actionURL: url,
+    httpMethod: method,
     data: data,
     params: data,
     httpHeaders: {
@@ -212,25 +248,23 @@ var saveLogicalGroup = function() {
     },
     callback: function(rpcResponse, data, rpcRequest) {
 
-      if (rpcResponse.httpResponseCode == 200) {
-        console.log('opslaan gelukt');
+      if (rpcResponse.httpResponseCode == 200 || rpcResponse.httpResponseCode == 201) {
+        console.log('gelukt');
         var data = isc.JSON.decode(data);
+        var parent_ids = []
+        for (var i=0; i<data.parents.length; i++) {
+          parent_ids.push(data.parents[i].parent_id);
+        }
+        data.parents = parent_ids;
         logicalGroupForm.setData(data);
+        logicalGroupForm.setErrors([]);
         timeseriesSelectionGrid.setData(data.alarm_item_set);
         logicalGroupTree.fetchData({test: timestamp()}); //force new fetch with timestamp
-
-      } else if (rpcResponse.httpResponseCode == 201) {
-        console.log('aanmaken nieuw object gelukt');
-        var data = isc.JSON.decode(data);
-        logicalGroupForm.setData(data);
-        timeseriesSelectionGrid.setData(data.alarm_item_set);
-
       } else if (rpcResponse.httpResponseCode == 400) {
         logicalGroupForm.setErrors(isc.JSON.decode(rpcResponse.httpResponseText), true);
         alert('validatie mislukt');
-
       } else {
-        alert('Opslaan mislukt. ' + data);
+        alert('Opslaan mislukt.');
       }
     }
   });
@@ -245,11 +279,63 @@ logicalGroupPage = isc.HLayout.create({
       members: [
         logicalGroupForm,
         timeseriesSelectionGrid,
-        isc.IButton.create({
-          title: 'Opslaan',
-          click: function() {
-            saveLogicalGroup(false);
-          }
+        isc.HLayout.create({
+          height: 30,
+          members: [
+            isc.IButton.create({
+              title: 'Annuleren',
+              click: function() {
+                logicalGroupForm.setData([]);
+                logicalGroupForm.getField('parents').setValue([]); //reset this field manual
+                logicalGroupForm.setErrors([]);
+                timeseriesSelectionGrid.setData([]);
+              }
+            }),
+            isc.IButton.create({
+              title: 'Nieuw',
+              click: function() {
+                logicalGroupForm.setData([]);
+                logicalGroupForm.getField('parents').setValue([]); //reset this field manual
+                logicalGroupForm.setErrors([]);
+                timeseriesSelectionGrid.setData([]);
+              }
+            }),
+            isc.IButton.create({
+              title: 'Opslaan',
+              click: function() {
+                saveLogicalGroup(false);
+              }
+            }),
+            isc.IButton.create({
+              title: 'Opslaan als nieuw',
+              width: 150,
+              click: function() {
+                saveLogicalGroup(true);
+              }
+            }),
+            isc.IButton.create({
+              title: 'Verwijderen',
+              click: function() {
+                var id = logicalGroupForm.getValue('id');
+                if (id) {
+                  RPCManager.sendRequest({
+                    actionURL: logicalGroupForm.getData()['url'],
+                    httpMethod: 'DELETE',
+                    httpHeaders: {
+                      'X-CSRFToken': document.cookie.split('=')[1]
+                    },
+                    callback: function(rpcResponse, data, rpcRequest) {
+                      console.log('verwijderen gelukt');
+                      logicalGroupForm.setData([]);
+                      logicalGroupForm.setErrors([]);
+                      timeseriesSelectionGrid.setData([]);
+                      logicalGroupTree.fetchData({test: timestamp()}); //force new fetch with timestamp
+                    }
+                  });
+                }
+              }
+            })
+          ]
         })
       ]
     }),
