@@ -1,4 +1,3 @@
-RPCManager.allowCrossDomainCalls = true
 
 
 var alarmDS = isc.RestDataSource.create({
@@ -85,10 +84,10 @@ var alarmItemList = isc.ListGrid.create({
   canEdit: true,
   editEvent: "click",
   fields:[
-    {name: "alarm_type", title: "alarm type", type: "text", width:80, valueMap: ['Timeseries', 'Location', 'LogicalGroup']},
+    {name: "alarm_type", title: "alarm type", type: "text", width:80, valueMap: ['timeseries', 'location', 'logical group']},
     {name: "object_id", title: "object_id", type: "text", width:50},
-    {name: "id", title:"id", visible: false},
-    {name: "name", title:"Naam", hidden: true},
+    {name: "id", title:"id", showIf: function() { return false; }},
+    {name: "name", title:"Naam", showIf: function() { return false; }},
     {name: 'logical_check', title: 'wat', valueMap: ['All', 'At least one'], width: 50},
     {name: "value_type", title:"controle op", valueMap: ['a. Waarde', 'b. Status - Aantal metingen',
       'c. Status - Percentage betrouwbare waarden',
@@ -109,6 +108,9 @@ var alarmItemList = isc.ListGrid.create({
 var saveAlarm = function(isNew) {
   //todo: validation
 
+  var data = alarmForm.getData();
+  data.alarm_item_set = alarmItemList.getData();
+
   if (isNew) {
     alarmForm.setValue('id', null);
     //todo: set alarmItem id's on null
@@ -119,8 +121,6 @@ var saveAlarm = function(isNew) {
     var url = data.url;
   }
 
-  var data = alarmForm.getData();
-  data.alarm_item_set = alarmItemList.getData();
 
   RPCManager.sendRequest({
     actionURL: url,
@@ -142,7 +142,7 @@ var saveAlarm = function(isNew) {
         console.log('aanmaken nieuw object gelukt');
         data = isc.JSON.decode(data);
         alarmForm.setData(data);
-        alarmItem.setData(data.alarm_item_set);
+        alarmItemList.setData(data.alarm_item_set);
 
       } else if (rpcResponse.httpResponseCode == 400) {
         alarmForm.setErrors(isc.JSON.decode(rpcResponse.httpResponseText), true);
