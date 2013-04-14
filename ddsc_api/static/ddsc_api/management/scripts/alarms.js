@@ -3,8 +3,6 @@
 var alarmDS = isc.RestDataSource.create({
   autoFetchData: false,
   dataFormat: 'custom',
-  recordXPath: 'results',
-  bypassCache: false,
   dataURL: "http://33.33.33.10:8001/api/v1/alarmsettings",
   fields:[
     {name: "id", title:"id", hidden: true},
@@ -23,11 +21,14 @@ var alarmDS = isc.RestDataSource.create({
     dsRequest.httpHeaders = {
       "Accept" : "application/json"
     }
+    dsRequest.params = {
+      page_size: 0
+    }
   },
   transformResponse: function(dsResponse) {
     var json_data = isc.JSON.decode(dsResponse.data);
-    dsResponse.totalRows = json_data.count;
-    dsResponse.data = json_data.results;
+    dsResponse.totalRows = json_data.length;
+    dsResponse.data = json_data;
   }
 });
 
@@ -45,6 +46,7 @@ var alarmList = isc.ListGrid.create({
       callback: function(rpcResponse, data, rpcRequest) {
         data = isc.JSON.decode(data);
         alarmForm.setData(data);
+        alarmForm.setErrors([]);
         alarmItemList.setData(data.alarm_item_set);
       }
     });
@@ -105,13 +107,13 @@ var alarmItemList = isc.ListGrid.create({
 });
 
 
-var saveAlarm = function(isNew) {
+var saveAlarm = function(saveAsNew) {
   //todo: validation
 
   var data = alarmForm.getData();
   data.alarm_item_set = alarmItemList.getData();
 
-  if (isNew) {
+  if (saveAsNew || !data.id) {
     alarmForm.setValue('id', null);
     //todo: set alarmItem id's on null
     var method = 'POST';
@@ -120,6 +122,7 @@ var saveAlarm = function(isNew) {
     var method = 'PUT';
     var url = data.url;
   }
+  alarmForm.setErrors([]);
 
 
   RPCManager.sendRequest({
@@ -132,17 +135,24 @@ var saveAlarm = function(isNew) {
     },
     callback: function(rpcResponse, data, rpcRequest) {
 
-      if (rpcResponse.httpResponseCode == 200) {
-        console.log('opslaan gelukt');
+      if (rpcResponse.httpResponseCode == 200 || rpcResponse.httpResponseCode == 201) {
+        console.log('Gelukt');
         var data = isc.JSON.decode(data);
         alarmForm.setData(data);
         alarmItemList.setData(data.alarm_item_set);
-
-      } else if (rpcResponse.httpResponseCode == 201) {
-        console.log('aanmaken nieuw object gelukt');
-        data = isc.JSON.decode(data);
-        alarmForm.setData(data);
-        alarmItemList.setData(data.alarm_item_set);
+        alarmList.fetchData({test: timestamp()}); //force new fetch with timestamp
+        if (rpcResponse.httpResponseCode == 201) {
+          //in case of create, the list serializer is used for the return. do extra fetch to get details
+          RPCManager.sendRequest({
+            actionURL: data.url,
+            httpMethod: 'GET',
+            callback: function(rpcResponse, data, rpcRequest) {
+              data = isc.JSON.decode(data);
+              alarmForm.setData(data);
+              alarmItemList.setData(data.alarm_item_set);
+            }
+          });
+        }
 
       } else if (rpcResponse.httpResponseCode == 400) {
         alarmForm.setErrors(isc.JSON.decode(rpcResponse.httpResponseText), true);
@@ -187,6 +197,15 @@ alarmPage = isc.HLayout.create({
               title: 'Annuleren',
               click: function() {
                 alarmForm.setData([]);
+                alarmForm.setErrors([]);
+                alarmItemList.setData([]);
+              }
+            }),
+            isc.IButton.create({
+              title: 'Nieuw',
+              click: function() {
+                alarmForm.setData([]);
+                alarmForm.setErrors([]);
                 alarmItemList.setData([]);
               }
             }),
@@ -207,7 +226,6 @@ alarmPage = isc.HLayout.create({
               title: 'Verwijderen',
               click: function() {
                 var id = alarmForm.getValue('id');
-                debugger;
                 if (id) {
                   RPCManager.sendRequest({
                     actionURL: alarmForm.getData()['url'],
@@ -218,7 +236,9 @@ alarmPage = isc.HLayout.create({
                     callback: function(rpcResponse, data, rpcRequest) {
                       console.log('verwijderen gelukt');
                       alarmForm.setData([]);
+                      alarmForm.setErrors([]);
                       alarmItemList.setData([]);
+                      alarmList.fetchData({test: timestamp()}); //force new fetch with timestamp
                     }
                   });
                 }
