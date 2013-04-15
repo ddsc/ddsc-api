@@ -1,6 +1,6 @@
 var logicalGroupDS = isc.DataSource.create({
   dataFormat: 'custom',
-  dataURL: "http://33.33.33.10:8001/api/v1/logicalgroups/",
+  dataURL: settings.logicalgroups_url,
   defaultsNewNodesToRoot: true,
   fields:[
     {name: 'id', title: 'Id', type: 'text', canEdit: false},
@@ -94,7 +94,7 @@ var logicalGroupForm = isc.DynamicForm.create({
         params: {
           page_size: 1000
         },
-        dataURL: "http://33.33.33.10:8001/api/v1/dataowner/",
+        dataURL: settings.dataowners_url,
         fields:[
           {name: 'id', title: 'iD', primaryKey: true},
           {name: 'name', title: 'Name'}
@@ -109,7 +109,7 @@ var logicalGroupForm = isc.DynamicForm.create({
       optionDataSource: isc.DataSource.create({
         dataFormat: 'json',
         recordXPath: "results",
-        dataURL: "http://33.33.33.10:8001/api/v1/logicalgroups/",
+        dataURL: settings.logicalgroups_url,
         fields:[
           {name: 'id', title: 'iD', primaryKey: true},
           {name: 'name', title: 'Name'}
@@ -140,7 +140,7 @@ var timeseriesSelectionGrid = isc.ListGrid.create({
 
 var lgTimeseriesDS = isc.FilterPaginatedDataSource.create({
   autoFetchData: false,
-  dataURL: 'http://33.33.33.10:8001/api/v1/timeseries',
+  dataURL: settings.timeseries_url,
   fields:[
     {name: 'id', title: 'id', hidden: true},
     {name: 'uuid', title: 'UUID'},
@@ -166,15 +166,6 @@ var lgTimeseries = isc.ListGrid.create({
   dataSource: lgTimeseriesDS,
   canDragRecordsOut: true,
   dragDataAction: 'copy',
-  rowClick: function(record) {
-    RPCManager.sendRequest({
-      actionURL: record.url,
-      httpMethod: 'GET',
-      callback: function(rpcResponse, data, rpcRequest) {
-        locationForm.setData(isc.JSON.decode(data));
-      }
-    });
-  },
   dataProperties:{
     disableCacheSync: true
   },
@@ -212,7 +203,7 @@ var saveLogicalGroup = function(saveAsNew) {
     delete data.url;
     //todo: set alarmItem id's on null
     var method = 'POST';
-    var url = "http://33.33.33.10:8001/api/v1/logicalgroups";
+    var url = settings.logicalgroups_url;
   } else {
     var method = 'PUT';
     var url = data.url;

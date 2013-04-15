@@ -12,7 +12,7 @@ isc.AquoDataSource.addProperties({
 
 
 var timeseriesDS = isc.FilterPaginatedDataSource.create({
-  dataURL: 'http://33.33.33.10:8001/api/v1/timeseries',
+  dataURL: settings.timeseries_url,
   fields:[
     {name: 'id', title: 'id', hidden: true},
     {name: 'uuid', title: 'UUID'},
@@ -90,7 +90,7 @@ var timeseriesList = isc.ListGrid.create({
 
 
 var locationDS = isc.FilterPaginatedDataSource.create({
-  dataURL: 'http://33.33.33.10:8001/api/v1/locations',
+  dataURL: settings.locations_url,
   autoFetchData: false,
   fields:[
     {name: 'id', title: 'iD', primaryKey: true, hidden: true},
@@ -100,7 +100,7 @@ var locationDS = isc.FilterPaginatedDataSource.create({
 });
 
 var sourceDS = isc.FilterPaginatedDataSource.create({
-  dataURL: 'http://33.33.33.10:8001/api/v1/sources',
+  dataURL: settings.sources_url,
   autoFetchData: false,
   fields:[
     {name: 'uuid', title: 'UUID', primaryKey: true},
@@ -144,7 +144,7 @@ var timeseriesForm = isc.DynamicForm.create({
         params: {
           page_size: 1000
         },
-        dataURL: 'http://33.33.33.10:8001/api/v1/dataowner/',
+        dataURL: settings.dataowners_url,
         fields:[
           {name: 'id', title: 'ID', primaryKey: true},
           {name: 'name', title: 'Name'}
@@ -165,7 +165,7 @@ var timeseriesForm = isc.DynamicForm.create({
     {type: 'header', defaultValue: 'Aquo gegevens'},
     {
       name: 'parameter', title: 'Parameter', editorType: 'DefaultSelectItem', displayField: 'description', valueField: 'code',
-      optionDataSource: isc.AquoDataSource.create({dataURL: 'http://33.33.33.10:8001/api/v1/parameters'}),
+      optionDataSource: isc.AquoDataSource.create({dataURL: settings.parameters_url}),
       pickListFields:[
         {name:'code', width: 100},
         {name:'description'},
@@ -175,7 +175,7 @@ var timeseriesForm = isc.DynamicForm.create({
     },
     {
       name: 'unit', title: 'Eenheid', editorType: 'DefaultSelectItem', displayField: 'description', valueField: 'code',
-      optionDataSource: isc.AquoDataSource.create({dataURL: 'http://33.33.33.10:8001/api/v1/units'}),
+      optionDataSource: isc.AquoDataSource.create({dataURL: settings.units_url}),
       pickListFields:[
         {name:'code', width: 100},
         {name:'description'}
@@ -184,7 +184,7 @@ var timeseriesForm = isc.DynamicForm.create({
     },
     {
       name: 'reference_frame', title: 'Hoedaningheid', editorType: 'DefaultSelectItem', displayField: 'description', valueField: 'code',
-      optionDataSource: isc.AquoDataSource.create({dataURL: 'http://33.33.33.10:8001/api/v1/referenceframes'}),
+      optionDataSource: isc.AquoDataSource.create({dataURL: settings.referenceframes_url}),
       pickListFields:[
         {name:'code', width: 100},
         {name:'description'}
@@ -193,7 +193,7 @@ var timeseriesForm = isc.DynamicForm.create({
     },
     {
       name: 'compartment', title: 'Compartiment', editorType: 'DefaultSelectItem', displayField: 'description', valueField: 'code',
-      optionDataSource: isc.AquoDataSource.create({dataURL: 'http://33.33.33.10:8001/api/v1/compartments'}),
+      optionDataSource: isc.AquoDataSource.create({dataURL: settings.compartments_url}),
       pickListFields:[
         {name:'code', width: 100},
         {name:'description'}
@@ -202,7 +202,7 @@ var timeseriesForm = isc.DynamicForm.create({
     },
     {
       name: 'measuring_device', title: 'Meetapperatuur', editorType: 'DefaultSelectItem', displayField: 'description', valueField: 'code',
-      optionDataSource: isc.AquoDataSource.create({dataURL: 'http://33.33.33.10:8001/api/v1/measuringdevices'}),
+      optionDataSource: isc.AquoDataSource.create({dataURL: settings.measuringdevices_url}),
       pickListFields:[
         {name:'code', width: 100},
         {name:'description'}
@@ -211,7 +211,7 @@ var timeseriesForm = isc.DynamicForm.create({
     },
     {
       name: 'measuring_method', title: 'Meetmethode', editorType: 'DefaultSelectItem', displayField: 'description', valueField: 'code',
-      optionDataSource: isc.AquoDataSource.create({dataURL: 'http://33.33.33.10:8001/api/v1/measuringmethods'}),
+      optionDataSource: isc.AquoDataSource.create({dataURL: settings.measuringmethods_url}),
       pickListFields:[
         {name:'code', width: 100},
         {name:'description'}
@@ -220,7 +220,7 @@ var timeseriesForm = isc.DynamicForm.create({
     },
     {
       name: 'processing_method', title: 'Verwerkingsmethode', editorType: 'DefaultSelectItem', displayField: 'description', valueField: 'code',
-      optionDataSource: isc.AquoDataSource.create({dataURL: 'http://33.33.33.10:8001/api/v1/processingmethods'}),
+      optionDataSource: isc.AquoDataSource.create({dataURL: settings.processingmethods_url}),
       pickListFields:[
         {name:'code', width: 100},
         {name:'description'}
@@ -255,7 +255,7 @@ var saveTimeseries = function(saveAsNew) {
     delete data.url;
     //todo: set alarmItem id's on null
     var method = 'POST';
-    var url = 'http://33.33.33.10:8001/api/v1/timeseries';
+    var url = settings.timeseries_url;
   } else {
     var method = 'PUT';
     var url = data.url;

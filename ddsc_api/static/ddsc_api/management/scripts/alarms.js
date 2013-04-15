@@ -3,7 +3,7 @@
 var alarmDS = isc.RestDataSource.create({
   autoFetchData: false,
   dataFormat: 'custom',
-  dataURL: "http://33.33.33.10:8001/api/v1/alarmsettings",
+  dataURL: settings.alarm_settings_url,
   fields:[
     {name: "id", title:"id", hidden: true},
     {name: "active_status", title: "actief", type: "boolean", width:35},
@@ -120,7 +120,7 @@ var saveAlarm = function(saveAsNew) {
     delete data.url;
     //todo: set alarmItem id's on null
     var method = 'POST';
-    var url = "http://33.33.33.10:8001/api/v1/alarmsettings";
+    var url = settings.alarm_settings_url;
   } else {
     var method = 'PUT';
     var url = data.url;

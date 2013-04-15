@@ -8,7 +8,7 @@ var locationDS = isc.RestDataSource.create({
   dataFormat: 'custom',
   recordXPath: 'results',
   bypassCache: false,
-  dataURL: "http://33.33.33.10:8001/api/v1/locations",
+  dataURL: settings.locations_url,
   containsCredentials: true,
   fields:[
     {name:"url", title:"Url", hidden: true},
@@ -48,33 +48,6 @@ var locationDS = isc.RestDataSource.create({
 //  clientOnly: true,
 //  testData: countryData
 });
-
-var locationDetailDS = isc.RestDataSource.create({
-  ID: "locationDetailDS",
-  autoFetchData: false,
-  dataFormat: 'json',
-  dataURL: "http://33.33.33.10:8001/api/v1/locations/8D608BED-28C8-463A-8E80-D7361E5D49A1",
-  fields:[
-    {name:"url", title:"Url", hidden: true},
-    {name:"uuid", title:"Uuid", hidden: true},
-    {name:"name", title:"Name"},
-    {name:"description", title:"Description"},
-    {name:"point_geometry", title:"geometry"},
-    {name:"geometry_precision", title:"Geometry precisie", hidden: true},
-    {name:"relative_location", title:"Relatieve locatie", hidden: true},
-    {name: "path", title: "path", type: "text", width: 80},
-    {name: "depth", title: "diepte", type: "integer", width:50}
-  ],
-  transformRequest: function(dsRequest) {
-    dsRequest.httpHeaders = {
-      "Accept" : "application/json"
-    }
-  },
-  transformResponse: function(dsResponse) {
-  }
-});
-
-
 
 
 var locationForm = isc.DynamicForm.create({

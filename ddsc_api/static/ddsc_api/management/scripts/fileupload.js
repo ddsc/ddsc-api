@@ -4,7 +4,7 @@ var uploadDS = isc.RestDataSource.create({
   dataFormat: 'custom',
   recordXPath: 'results',
   bypassCache: false,
-  dataURL: "http://33.33.33.10:8001/api/v1/alarmsettings",
+  dataURL: settings.alarm_settings_url,
   fields:[
     {name: "file", title:"CSV file", type: 'binary'}
   ]

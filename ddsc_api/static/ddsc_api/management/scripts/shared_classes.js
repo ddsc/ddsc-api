@@ -53,6 +53,7 @@ isc.DefaultSelectItem.addProperties({
     showFilterEditor:true,
     dataPageSize: 20
   },
+  autoFetchData: false,
   valueField: 'id',
   displayField: 'name'
 });
