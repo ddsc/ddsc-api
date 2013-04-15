@@ -1,0 +1,53 @@
+body {
+  /*padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+  /*fallback*/
+  background-image: url('../images/cardboard_flat_white.png');
+  /* image with opacity layer */
+  background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('../images/cardboard_flat_white.png');
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('../images/cardboard_flat_white.png');
+  background-image: -o-linear-gradient(top, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('../images/cardboard_flat_white.png');
+  background-image: linear-gradient(top, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)), url('../images/cardboard_flat_white.png');
+  margin: 0px;
+}
+
+/* Will be compiled down to a single stylesheet with your sass files */
+a {
+  cursor: pointer;
+}
+
+#content {
+  min-height: 700px; /*prefent lizard-logo on top of page*/
+}
+.subhead img {
+  margin:auto;
+  display:block;
+}
+
+.footer {
+  /*background-color: #fff;*/
+}
+.footer span {
+  color: #ccc;
+  font-size: .7em;
+  padding: 10px;
+}
+
+.footer span a {
+  color: #555;
+  text-decoration: none;
+  filter: gray; /* IE6-9 */
+  filter: url(filters.svg#grayscale);
+  -webkit-filter: grayscale(1);
+  filter: grayscale(1);
+  -o-transition: filter 1s ease-out opacity 1s ease-out;
+  -ms-transition: filter 1s ease-out opacity 1s ease-out;
+  -moz-transition: filter 1s ease-out opacity 1s ease-out;
+  -webkit-transition: filter 1s ease-out opacity 1s ease-out;
+  transition: filter 1s ease-out opacity 1s ease-out;
+}
+
+.footer span a:hover{
+  filter: none;
+  -webkit-filter: grayscale(0);
+  text-decoration: none;
+}
