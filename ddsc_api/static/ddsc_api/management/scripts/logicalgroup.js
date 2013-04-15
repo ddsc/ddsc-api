@@ -83,7 +83,8 @@ var logicalGroupForm = isc.DynamicForm.create({
     {name: "id", title:"id", type: 'integer', canEdit: false},
     {name: "url", title: "Url", canEdit: false /*editorType: 'hiddenField'*/},
     {name: "name", width: "*"},
-    {name: "owner", type: "combo",
+    {
+      name: "owner", type: "combo",
       width: "*",
       displayField: "name",
       valueField: "name",
@@ -137,41 +138,22 @@ var timeseriesSelectionGrid = isc.ListGrid.create({
 
 //#####################################################################################################################
 
-var lgTimeseriesDS = isc.RestDataSource.create({
+var lgTimeseriesDS = isc.FilterPaginatedDataSource.create({
   autoFetchData: false,
-  dataFormat: 'custom',
-  dataURL: "http://33.33.33.10:8001/api/v1/timeseries",
+  dataURL: 'http://33.33.33.10:8001/api/v1/timeseries',
   fields:[
-    {name:"url", title:"Url", hidden: true},
-    {name:"uuid", title:"Uuid", hidden: true},
-    {name:"name", title:"Name"}
-  ],
-  transformRequest: function(dsRequest) {
-    dsRequest.httpHeaders = {
-      "Accept" : "application/json"
-    }
-    dsRequest.params = {
-      page: Math.floor(dsRequest.startRow / dsRequest.dataPageSize) + 1, //first result is page 1
-      srow: dsRequest.startRow,
-      page_size: dsRequest.dataPageSize
-    }
-
-    if (dsRequest.data) {
-      var filter = {}
-      for (key in dsRequest.data ) {
-        filter[key + '__icontains'] = dsRequest.data[key];
-      }
-      dsRequest.params.filter = filter;
-    }
-  },
-  transformResponse: function(dsResponse) {
-    var json_data = isc.JSON.decode(dsResponse.data);
-    dsResponse.totalRows = json_data.count;
-    dsResponse.data = json_data.results;
-    dsResponse.startRow = (dsResponse.context.params.page - 1) * dsResponse.context.params.page_size;
-    dsResponse.endRow = dsResponse.startRow + dsResponse.context.params.page_size;
-    console.log('got row ' + dsResponse.startRow + ' till ' + dsResponse.endRow);
-  }
+    {name: 'id', title: 'id', hidden: true},
+    {name: 'uuid', title: 'UUID'},
+    {name: 'name', title: 'Naam'},
+    {
+      name: 'value_type', title: 'Waarde type', valueMap: ['integer', 'float', 'text', 'image',
+      'georeferenced remote sensing', 'movie', 'file']
+    },
+    {name: 'owner', title: 'Data eigenaar'},
+    {name: 'location.name', title: 'Locatie'},
+    {name: 'parameter', title: 'Parameter'},
+    {name: 'unit', title: 'Eenheid'}
+  ]
 });
 
 

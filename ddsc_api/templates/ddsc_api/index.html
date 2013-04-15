@@ -28,13 +28,20 @@
     <script src={{ STATIC_URL }}ddsc_api/management/scripts/vendor/isomorphic/system/modules/ISC_DataBinding.js></script>
     <script src={{ STATIC_URL }}ddsc_api/management/scripts/vendor/isomorphic/skins/Enterprise/load_skin.js></script>
 
+    <script>
+        isc.setAutoDraw(false);
+
+    </script>
+
   </head>
   <body>
 
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/shared_classes.js></script>
     <script src={{ STATIC_URL }}ddsc_api/management/scripts/location.js></script>
     <script src={{ STATIC_URL }}ddsc_api/management/scripts/logicalgroup.js></script>
     <script src={{ STATIC_URL }}ddsc_api/management/scripts/alarms.js></script>
-
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/fileupload.js></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/timeseries.js></script>
 
     <div id="header">
       <div class="navbar navbar-inverse navbar-fixed-top" style="z-index: 10;">
@@ -67,19 +74,20 @@
     <script>
       isc.TabSet.create({
         ID: "topTabSet",
+        autoDraw: true,
         htmlElement:"content",
         tabBarPosition: "top",
         width: "100%",
         //margin: "10",
         height: "700",
-        selectedTab: 0,
+        selectedTab: 5,
         tabs: [{
           title: "Alarmen",
           pane: alarmPage
         },
         {
           title: "Uploaden",
-          pane: "dag"
+          pane: fileUploadPage
         },
         {
           title: "Logische groepen",
@@ -96,7 +104,7 @@
         },
         {
           title: "Tijdseries",
-          pane: "dag"
+          pane: timeseriesPage
         },
         {
           title: "Bronnen",

@@ -124,38 +124,7 @@ var locationForm = isc.DynamicForm.create({
       required: true,
       title: "diepte",
       type: "integer"
-    },
-    {
-      name: 'postBtn',
-      title: 'Opslaan',
-      type: 'Button',
-      click: function(form) {
-        //todo: validation
-
-        debugger;
-        var data = form.getData();
-
-        delete data['timeseries']
-        delete data['sublocations']
-
-        RPCManager.sendRequest({
-          actionURL: data.url,
-          httpMethod: 'PUT',
-          data: data,
-          params: data,
-          httpHeaders: {
-            'X-CSRFToken': document.cookie.split('=')[1]
-          },
-          callback: function(rpcResponse, data, rpcRequest) {
-            alert('opgeslagen');
-          }
-        });
-
-        form.saveData();
-      }
     }
-    //table
-
   ]
 });
 

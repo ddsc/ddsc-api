@@ -114,7 +114,10 @@ var saveAlarm = function(saveAsNew) {
   data.alarm_item_set = alarmItemList.getData();
 
   if (saveAsNew || !data.id) {
-    alarmForm.setValue('id', null);
+    //alarmForm.setValue('id', null);
+    //alarmForm.setValue('url', null);
+    delete data.id;
+    delete data.url;
     //todo: set alarmItem id's on null
     var method = 'POST';
     var url = "http://33.33.33.10:8001/api/v1/alarmsettings";
