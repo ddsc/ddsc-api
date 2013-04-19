@@ -1,43 +1,17 @@
 
-var uploadDS = isc.RestDataSource.create({
-  autoFetchData: false,
-  dataFormat: 'custom',
-  recordXPath: 'results',
-  bypassCache: false,
-  dataURL: settings.alarm_settings_url,
-  fields:[
-    {name: "file", title:"CSV file", type: 'binary'}
-  ]
-});
-
-
-var uploadForm = isc.DynamicForm.create({
-  autoDraw: false,
-  width: 350,
-  numCols: 2,
-  colWidths: [100, 250],
-  dataSource: uploadDS,
-  fields: [
-    { type: 'header', defaultValue: "Upload bestand met waarden"},
-    { name: 'file'},
-    {
-      name: 'postBtn',
-      title: 'Opslaan',
-      type: 'Button',
-      click: function(form) {
-        //todo: validation
-
-        debugger;
-        //var data = form.getData();
-        form.saveData();
-      }
-    }
-  ]
-});
+uploadFrame = isc.VLayout.create({width:"100%", height:"100%", members:[
+    isc.HTMLPane.create({
+        ID: "myPane",
+        showEdges: false,
+        contentsURL: settings.csv_upload_url,
+        contentsType: "page"
+    })
+]})
 
 fileUploadPage = isc.HLayout.create({
   autoDraw: false,
   members: [
-    uploadForm
+    uploadFrame
   ]
 });
+

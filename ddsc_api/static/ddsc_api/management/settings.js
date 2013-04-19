@@ -1,6 +1,7 @@
 
 
-var domain = (domain ? domain : 'http://' + window.location.host + '/api/v1/');
+var base = (domain ? domain : 'http://' + window.location.host);
+var domain = base + '/api/v1/';
 
 
 var settings = {
@@ -16,7 +17,7 @@ var settings = {
 	  //account_url: domain + 'account/',
 	  //login_token_url: domain + 'account/login-url/',
 	  //logout_token_url: domain + 'account/logout-url/',
-    //events_url: domain + 'events/',
+    csv_upload_url: base + '/csv-upload/',
     alarm_settings_url: domain + 'alarmsettings',
     dataowners_url: domain + 'dataowner/',
     sources_url: domain + 'sources/',
