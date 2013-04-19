@@ -9,6 +9,8 @@ var settings = {
     //wms_proxy_base_url: domain + 'proxy/?',
     logicalgroups_url: domain +'logicalgroups/',
     timeseries_url: domain + 'timeseries/',
+    manufacturer_url: domain + 'manufacturer/',
+    datasets_url: domain + 'datasets/',
     //alarms_url: domain + 'alarms/' + extra,
     //collages_url: domain + 'collages/',
     //workspace_url: domain + 'workspaces/',

@@ -47,7 +47,7 @@ var timeseriesDS = isc.FilterPaginatedDataSource.create({
   ]
 });
 
-var setFormData = function(data) {
+var setTimeseriesFormData = function(data) {
 
   data.source = data.source.uuid
   data.location = data.location.uuid
@@ -79,7 +79,7 @@ var timeseriesList = isc.ListGrid.create({
       httpMethod: 'GET',
       callback: function(rpcResponse, data, rpcRequest) {
         data = isc.JSON.decode(data);
-        setFormData(data);
+        setTimeseriesFormData(data);
       }
     });
   },
@@ -276,7 +276,7 @@ var saveTimeseries = function(saveAsNew) {
       if (rpcResponse.httpResponseCode == 200 || rpcResponse.httpResponseCode == 201) {
         console.log('Gelukt');
         var data = isc.JSON.decode(data);
-        setFormData(data);
+        setTimeseriesFormData(data);
         timeseriesList.fetchData({test: timestamp()}); //force new fetch with timestamp
         if (rpcResponse.httpResponseCode == 201) {
           //in case of create, the list serializer is used for the return. do extra fetch to get details
@@ -285,7 +285,7 @@ var saveTimeseries = function(saveAsNew) {
             httpMethod: 'GET',
             callback: function(rpcResponse, data, rpcRequest) {
               data = isc.JSON.decode(data);
-              setFormData(data);
+              setTimeseriesFormData(data);
             }
           });
         }

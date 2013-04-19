@@ -11,12 +11,14 @@ isc.FilterPaginatedDataSource.addProperties({
     }
     dsRequest.params = {};
 
-    if (typeof(dsRequest.startRow) == 'number') {
+    if (typeof(dsRequest.startRow)=='number' && typeof(dsRequest.dataPageSize)=='number') {
+
       dsRequest.params = {
         page: Math.floor(dsRequest.startRow / dsRequest.dataPageSize) + 1, //first result is page 1
         page_size: dsRequest.dataPageSize
       }
     }
+
     if (dsRequest.data) {
       var filter = {}
       for (key in dsRequest.data ) {
@@ -34,9 +36,11 @@ isc.FilterPaginatedDataSource.addProperties({
     var json_data = isc.JSON.decode(dsResponse.data);
     dsResponse.totalRows = json_data.count;
     dsResponse.data = json_data.results;
-    dsResponse.startRow = (dsResponse.context.params.page - 1) * dsResponse.context.params.page_size;
-    dsResponse.endRow = dsResponse.startRow + dsResponse.context.params.page_size;
-    console.log('got row ' + dsResponse.startRow + ' till ' + dsResponse.endRow);
+    if (dsResponse.context.params.page_size) {
+      dsResponse.startRow = (dsResponse.context.params.page - 1) * dsResponse.context.params.page_size;
+      dsResponse.endRow = dsResponse.startRow + dsResponse.context.params.page_size;
+      console.log('got row ' + dsResponse.startRow + ' till ' + dsResponse.endRow);
+    }
   }
 });
 
