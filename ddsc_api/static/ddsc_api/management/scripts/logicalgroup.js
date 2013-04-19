@@ -4,27 +4,37 @@ var logicalGroupDS = isc.DataSource.create({
   defaultsNewNodesToRoot: true,
   fields:[
     {name: 'id', title: 'Id', type: 'text', canEdit: false},
-    {name: 'url', title: 'Url', type: 'text', canEdit: false, primaryKey: true},
+    {name: 'url', title: 'Url', type: 'text', canEdit: false},
     {name: 'parents', title: 'Parent', type: 'text', foreignKey: 'url', rootValue: 'root'},
     {name: 'name', title: 'Naam'},
-    {name: 'owner', title: 'Eigenaar'}
+    {name: 'owner', title: 'Eigenaar'},
+    {name: 'description', title: 'Beschrijving'}
   ],
   transformResponse: function(dsResponse) {
     var json_data = isc.JSON.decode(dsResponse.data);
     var result = [];
+
+    //process data, to put nodes under multiple parent nodes
     for (var i = 0; i < json_data.results.length; i++ ) {
       var rec = json_data.results[i];
       rec.isFolder = true;
 
       if (rec.parents.length > 0) {
         for (var ii = 0; ii < rec.parents.length; ii++ ) {
-          var sub_rec = Object.create(rec);
+          var sub_rec = isc.clone(rec);
+          sub_rec._url = sub_rec.url;
+          if (ii > 0) {
+            sub_rec.id = null;
+            sub_rec.url = null;
+          }
           sub_rec.parents = rec.parents[ii];
           result.push(sub_rec);
+
         }
-        result.push(rec);
+        //result.push(rec);
       } else {
         rec.parents = 'root';
+        rec._url = rec.url;
         result.push(rec);
       }
     }
@@ -51,7 +61,7 @@ var logicalGroupTree = isc.TreeGrid.create({
   ],
   rowClick: function(record) {
     RPCManager.sendRequest({
-      actionURL: record.url,
+      actionURL: record._url,
       httpMethod: 'GET',
       callback: function(rpcResponse, data, rpcRequest) {
         var json_data = isc.JSON.decode(rpcResponse.data);
@@ -97,11 +107,11 @@ var logicalGroupForm = isc.DynamicForm.create({
         dataURL: settings.dataowners_url,
         fields:[
           {name: 'id', title: 'iD', primaryKey: true},
-          {name: 'name', title: 'Name'}
+          {name: 'name', title: 'Naam'}
         ]
       })
     },
-    {name: "description", type: 'textArea', width: "*"},
+    {name: "description", title: 'Beschrijving', type: 'textArea', width: "*"},
     {
       name: "parents",
       title: "Parents",
@@ -112,7 +122,7 @@ var logicalGroupForm = isc.DynamicForm.create({
         dataURL: settings.logicalgroups_url,
         fields:[
           {name: 'id', title: 'iD', primaryKey: true},
-          {name: 'name', title: 'Name'}
+          {name: 'name', title: 'Naam'}
         ]
       }),
       displayField: "name",
@@ -209,7 +219,6 @@ var saveLogicalGroup = function(saveAsNew) {
     var url = data.url;
   }
   alarmForm.setErrors([]);
-
 
   RPCManager.sendRequest({
     actionURL: url,
