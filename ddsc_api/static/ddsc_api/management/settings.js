@@ -20,6 +20,7 @@ var settings = {
 	  //login_token_url: domain + 'account/login-url/',
 	  //logout_token_url: domain + 'account/logout-url/',
     //events_url: domain + 'events/',
+    status_url: domain + 'status/',
     active_alarm_url: domain + 'alarms/',
     csv_upload_url: base + '/csv-upload/',
     alarm_settings_url: domain + 'alarmsettings',
