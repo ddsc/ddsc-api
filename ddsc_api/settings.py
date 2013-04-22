@@ -140,8 +140,8 @@ INSTALLED_APPS = (
     'ddsc_api',
     'ddsc_core',
     'dikedata_api',
-    #'lizard_ui',
-    #'lizard_map',
+    'lizard_ui',
+    'lizard_map',
     'lizard_maptree',
     'lizard_wms',
     'ddsc_site', # depends on lizard_wms & lizard_security
