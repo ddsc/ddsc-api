@@ -43,7 +43,9 @@
     <script src={{ STATIC_URL }}ddsc_api/management/scripts/timeseries.js></script>
     <script src={{ STATIC_URL }}ddsc_api/management/scripts/source.js></script>
     <script src={{ STATIC_URL }}ddsc_api/management/scripts/accessgroup.js></script>
-
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/overview_alarm.js></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/overview_status.js></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/overview_annotation.js></script>
 
     <div id="content"> {% csrf_token %}
     </div>
@@ -60,22 +62,18 @@
         tabBarPosition: "top",
         width: "100%",
         height: "700",
-        selectedTab: 6,
+        selectedTab: 1,
         tabs: [{
             title: 'Overzicht',
             pane: 'hallo'
         },
         {
           title: 'Actieve alarmen',
-          pane: 'hallo'
+          pane: activeAlarmPage
         },
         {
           title: 'Status tijdseries',
-          pane: 'hallo'
-        },
-        {
-          title: 'Overzicht annotaties',
-          pane: 'hallo'
+          pane: statusPage
         },
         {
           title: "Alarmen beheer",

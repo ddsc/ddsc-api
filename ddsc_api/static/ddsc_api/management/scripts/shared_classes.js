@@ -25,13 +25,22 @@ isc.FilterPaginatedDataSource.addProperties({
         key = key.replace('.', '__')
         if (key === 'id') {
           filter[key] = dsRequest.data[key];
+        } else if (!typeof(dsRequest.startRow)=='number') {
+          //request for specific value - used for 'start' value in forms
+          filter[key] = dsRequest.data[key];
         } else {
           filter[key + '__icontains'] = dsRequest.data[key];
         }
       }
       dsRequest.params.filter = filter;
+      debugger;
     }
+    if (dsRequest.sortBy && dsRequest.sortBy.length>0) {
+      dsRequest.params.order = dsRequest.sortBy
+    }
+
   },
+  allowAdvancedCriteria: true,
   transformResponse: function(dsResponse) {
     var json_data = isc.JSON.decode(dsResponse.data);
     dsResponse.totalRows = json_data.count;
