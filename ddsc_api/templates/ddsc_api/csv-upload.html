@@ -1,0 +1,32 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="nl"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>DDSC</title>
+    <meta name="description" content="DDSC is a initiative to display data received from sensors in levees">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link href="{{ STATIC_URL }}ddsc_api/management/styles/main.css" rel="stylesheet" >
+
+  </head>
+  <body>
+
+    <script src="{{ STATIC_URL }}ddsc_api/management/settings.js"></script>
+
+    <div id="csv-upload">
+      {{ message }}
+      {{ form.non_field_errors }}
+      <form enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        {{ form.file.errors }}
+        <input type="FILE" name="file" id="file" class="textItem" style="-moz-user-focus:normal;">
+        <input type="submit" value="Opslaan">
+      </form>
+    </div>
+  </body>
+</html>

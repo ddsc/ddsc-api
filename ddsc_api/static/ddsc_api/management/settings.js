@@ -1,6 +1,7 @@
 
 
-var domain = (domain ? domain : 'http://' + window.location.host + '/api/v1/');
+var base = (domain ? domain : 'http://' + window.location.host);
+var domain = base + '/api/v1/';
 
 
 var settings = {
@@ -11,7 +12,6 @@ var settings = {
     timeseries_url: domain + 'timeseries/',
     manufacturer_url: domain + 'manufacturer/',
     datasets_url: domain + 'datasets/',
-    status_url: domain + 'status/',
     //alarms_url: domain + 'alarms/' + extra,
     //collages_url: domain + 'collages/',
     //workspace_url: domain + 'workspaces/',
@@ -20,8 +20,9 @@ var settings = {
 	  //login_token_url: domain + 'account/login-url/',
 	  //logout_token_url: domain + 'account/logout-url/',
     //events_url: domain + 'events/',
-    alarm_settings_url: domain + 'alarmsettings/',
     active_alarm_url: domain + 'alarms/',
+    csv_upload_url: base + '/csv-upload/',
+    alarm_settings_url: domain + 'alarmsettings',
     dataowners_url: domain + 'dataowner/',
     sources_url: domain + 'sources/',
     units_url: domain + 'units/',
