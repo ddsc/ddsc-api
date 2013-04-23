@@ -13,7 +13,7 @@ var alarmDS = isc.RestDataSource.create({
       valueMap: ['5 min', '10 min', '15 min', '30 min', '1 hr', '6 hr', '12 hr', '24 hr']
     },
     {name: "urgency", title:"Urgentie", width: 50, valueMap: ['High', 'Low']},
-    {name: "message_type", title: "Notificatie", width: 80, valueMap: ['Email', 'SMS', 'Email and SMS']},
+    {name: "message_type", title: "Notificatie", width: 80, valueMap: ['Email', 'SMS', 'Email and SMS', 'No message']},
     {name: 'template', title: 'Template', hidden: true},
     {name: 'logical_check', title: 'Logische controle', valueMap: ['All', 'At least one'], hidden: true}
   ],
@@ -55,6 +55,38 @@ var alarmList = isc.ListGrid.create({
 });
 
 
+var alarmLocationDS = isc.FilterPaginatedDataSource.create({
+  dataURL: settings.locations_url,
+  autoFetchData: false,
+  fields:[
+    {name: 'id', title: 'iD', primaryKey: true, hidden: true},
+    {name: 'uuid', title: 'UUID'},
+    {name: 'name', title: 'Naam'}
+  ]
+});
+
+var alarmTimeseriesDS = isc.FilterPaginatedDataSource.create({
+  dataURL: settings.timeseries_url,
+  autoFetchData: false,
+  fields:[
+    {name: 'id', title: 'iD', primaryKey: true, hidden: true},
+    {name: 'uuid', title: 'UUID'},
+    {name: 'name', title: 'Naam'}
+  ]
+});
+
+var alarmLogicalGroupDS = isc.FilterPaginatedDataSource.create({
+  dataURL: settings.logicalgroups_url,
+  autoFetchData: false,
+  fields:[
+    {name: 'id', title: 'iD', primaryKey: true, hidden: true},
+    {name: 'name', title: 'Naam'}
+  ]
+});
+
+
+
+
 var alarmForm = isc.DynamicForm.create({
   //ID: "alarmForm",
   autoDraw: false,
@@ -87,7 +119,26 @@ var alarmItemList = isc.ListGrid.create({
   editEvent: "click",
   fields:[
     {name: "alarm_type", title: "alarm type", type: "text", width:80, valueMap: ['timeseries', 'location', 'logical group']},
-    {name: "object_id", title: "object_id", type: "text", width:50},
+    {
+      name: "object_id", title: "object_id", type: "text", width:50/*,
+      editorType: 'DefaultSelectItem',
+      pickListWidth:400,
+      pickListProperties: {
+        showFilterEditor:true,
+        dataPageSize: 20
+      },
+      autoFetchData: false,
+      valueField: 'id',
+      displayField: 'name',
+      optionDataSource: alarmLogicalGroupDS,
+      editorEnter: function(r) {
+        debugger;
+      },
+      pickListFields:[
+        {name: 'uuid', width: 100},
+        {name: 'name'}
+      ]*/
+    },
     {name: "id", title:"id", showIf: function() { return false; }},
     {name: "name", title:"Naam", showIf: function() { return false; }},
     {name: 'logical_check', title: 'wat', valueMap: ['All', 'At least one'], width: 50},

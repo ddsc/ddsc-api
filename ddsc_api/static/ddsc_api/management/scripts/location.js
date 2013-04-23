@@ -32,7 +32,8 @@ var locationList = isc.ListGrid.create({
       }
     });
   },
-  canReorderFields: true,
+  //canReorderFields: true,
+  useClientSorting:false,
   dataPageSize: 50,
   drawAheadRatio: 2
 });

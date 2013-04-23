@@ -109,7 +109,7 @@ var agTimeseriesDS = isc.FilterPaginatedDataSource.create({
     {name: 'name', title: 'Naam'},
     {
       name: 'value_type', title: 'Waarde type', valueMap: ['integer', 'float', 'text', 'image',
-      'georeferenced remote sensing', 'movie', 'file']
+      'georeferenced remote sensing', 'movie', 'file'], canFilter: false
     },
     {name: 'owner', title: 'Data eigenaar'},
     {name: 'location.name', title: 'Locatie'},

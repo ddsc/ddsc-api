@@ -5,6 +5,7 @@ isc.ClassFactory.defineClass("FilterPaginatedDataSource", isc.RestDataSource);
 
 isc.FilterPaginatedDataSource.addProperties({
   dataFormat: 'custom',
+  useClientSorting:false,
   transformRequest: function(dsRequest) {
     dsRequest.httpHeaders = {
       "Accept" : "application/json"
@@ -22,7 +23,6 @@ isc.FilterPaginatedDataSource.addProperties({
     if (dsRequest.data) {
       var filter = {}
       for (key in dsRequest.data ) {
-        key = key.replace('.', '__')
         if (key === 'id') {
           filter[key] = dsRequest.data[key];
         } else if (!typeof(dsRequest.startRow)=='number') {

@@ -20,7 +20,7 @@ var timeseriesDS = isc.FilterPaginatedDataSource.create({
     {name: 'description', title: 'Beschrijving', hidden: true},
     {
       name: 'value_type', title: 'Waarde type', valueMap: ['integer', 'float', 'text', 'image',
-      'georeferenced remote sensing', 'movie', 'file']
+      'georeferenced remote sensing', 'movie', 'file'], canFilter: false
     },
     {name: 'source', title: 'Bron systeem', hidden: true},//fk
     {name: 'owner', title: 'Data eigenaar'},//fk
