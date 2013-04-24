@@ -76,7 +76,7 @@ LANGUAGE_CODE = 'en-US'
 # the interface!
 LANGUAGES = (
     ('en', 'English'),
-#    ('nl', 'Nederlands'),
+    ('nl', 'Nederlands'),
 )
 # If you set this to False, Django will make some optimizations so as not to
 # load the internationalization machinery.
@@ -117,6 +117,7 @@ MIDDLEWARE_CLASSES = (
     # Gzip needs to be at the top.
     'django.middleware.gzip.GZipMiddleware',
     # Below is the default list, don't modify it.
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
