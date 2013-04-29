@@ -35,7 +35,7 @@ class CSVUploadView(TemplateView):
         if not 'file' in request.FILES:
             return self._response("Geen CSV bestand ontvangen.", 400)
         file = request.FILES.get('file')
-        content = [line.strip().split(';')
+        content = [line.strip().split(',')
             for line in file.read().split('\n') if line.strip()]
         data = [{'uuid':row[1].strip('"'),
                  'events':[{'datetime':row[0].strip('"'),
