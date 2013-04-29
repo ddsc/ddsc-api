@@ -13,8 +13,8 @@ var alarmDS = isc.RestDataSource.create({
       valueMap: ['5 min', '10 min', '15 min', '30 min', '1 hr', '6 hr', '12 hr', '24 hr']
     },
     {name: "urgency", title:"Urgentie", width: 50, valueMap: ['High', 'Low']},
-    {name: "message_type", title: "Notificatie", width: 80, valueMap: ['Email', 'SMS', 'Email and SMS', 'No message']},
-    {name: 'template', title: 'Template', hidden: true},
+    {name: "message_type", title: "Notificatie", width: 80, valueMap: ['Email', 'No message']},// not supported at this moment: 'SMS', 'Email and SMS',
+    {name: 'template', title: 'Sjabloon', hidden: true},
     {name: 'logical_check', title: 'Logische controle', valueMap: ['All', 'At least one'], hidden: true}
   ],
   transformRequest: function(dsRequest) {
@@ -33,6 +33,13 @@ var alarmDS = isc.RestDataSource.create({
 });
 
 
+var setAlarmFormData = function(data) {
+  alarmForm.setData(data);
+  alarmForm.setErrors([]);
+  alarmItemList.setData(data.alarm_item_set);
+}
+
+
 var alarmList = isc.ListGrid.create({
   //ID: "alarmList",
   width:700,
@@ -45,9 +52,7 @@ var alarmList = isc.ListGrid.create({
       httpMethod: 'GET',
       callback: function(rpcResponse, data, rpcRequest) {
         data = isc.JSON.decode(data);
-        alarmForm.setData(data);
-        alarmForm.setErrors([]);
-        alarmItemList.setData(data.alarm_item_set);
+        setAlarmFormData(data);
       }
     });
   },
@@ -85,26 +90,121 @@ var alarmLogicalGroupDS = isc.FilterPaginatedDataSource.create({
 });
 
 
-
-
 var alarmForm = isc.DynamicForm.create({
-  //ID: "alarmForm",
-  autoDraw: false,
   dataSource: alarmDS,
-  width: 350,
+  width: 400,
   numCols: 2,
-  colWidths: [100, 250],
+  colWidths: [100, 300],
   fields: [
     {type: 'header', defaultValue: "Alarm instellingen"},
-    {name:"id", title:"id", canEdit: false},
-    {name: "active_status", title: "actief", type: "boolean" , width: 300},
-    {name:"name", width: "*"},
-    {name:"frequency", width: "*"},
-    {name:"urgency", width: "*"},
+    {name: "id", title:"id", canEdit: false},
+    {name: "active_status", title: "actief", type: "boolean", defaultValue: true},
+    {name: "name", width: "*"},
+    {name: "frequency", width: "*"},
+    {name: "urgency", width: "*"},
     {name: "message_type", width: "*"},
     {name: 'template', type: 'textArea', width: "*"},
     {type: 'header', defaultValue: "Regels"},
     {name: 'logical_check', width: "*"}
+  ]
+});
+
+var alarmItemForm = isc.DynamicForm.create({
+  width: 400,
+  numCols: 2,
+  margin: 20,
+  colWidths: [75, 300],
+  fields: [
+
+    {name: "id", title: "id", canEdit: false},
+    {name: "name", title:"Naam", type: "text"},
+    {type: 'header', defaultValue: "Object"},
+    {name: "alarm_type", title: "Object type",  valueMap: ['timeseries', 'location', 'logical group'],
+      redrawOnChange: true, width: 200},
+    {
+      name: 'timeseries', title: 'Tijdserie', editorType: 'DefaultSelectItem', displayField: 'name', valueField: 'id',
+      showIf: "form.getValue('alarm_type') == 'timeseries'",
+      optionDataSource: alarmTimeseriesDS,
+      pickListFields:[
+        {name:'uuid', width: 100},
+        {name:'name'},
+        {name:'parameter', title: 'parameter code', width: 80}
+
+      ],
+      width: '*'
+    },
+    {
+      name: 'location', title: 'Locatie', editorType: 'DefaultSelectItem', displayField: 'name', valueField: 'id',
+      showIf: "form.getValue('alarm_type') == 'location'",
+      optionDataSource: alarmLocationDS,
+      pickListFields:[
+        {name:'uuid', width: 100},
+        {name:'name'},
+        {name:'parameter', title: 'parameter code', width: 80}
+
+      ],
+      width: '*'
+    },
+    {
+      name: 'logical group', title: 'Logische groep', editorType: 'DefaultSelectItem', displayField: 'name', valueField: 'id',
+      showIf: "form.getValue('alarm_type') == 'logical group'",
+      optionDataSource: alarmLogicalGroupDS,
+      pickListFields:[
+        {name: 'name', title: 'Naam'},
+        {name: 'owner', title: 'Eigenaar'}
+
+      ],
+      width: '*'
+    },
+    {type: 'header', defaultValue: "Controle op"},
+    {name: 'logical_check', title: 'Alles binnen of object of ten minste een', valueMap: ['All', 'At least one'], width: 200},
+    {name: "value_type", title:"Controle op", width: "*", valueMap: ['a. Waarde', 'b. Status - Aantal metingen',
+      'c. Status - Percentage betrouwbare waarden',
+      'd. Status - Percentage twijfelachtige waarden', 'e. Status - Percentage onbetrouwbare waarden',
+      'f. Status - Minimum meetwaarde', 'g. Status - Maximum meetwaarde', 'h. Status - Gemiddelde meetwaarde',
+      'i. Status - Standaard deviatie', 'j. Status - Tijd sinds laatste meting',
+      'k. Status - Procentuele afwijking van het aantal te verwachten metingen']
+    },
+    {name: 'comparision', title: 'Logische controle', valueMap: ['==', '!=', '>', '<'], width: 80},
+    {type: 'header', defaultValue: "Waarde(n) van tijdserie(s) binnen object"},
+    {name: "value_double", title:"Decimaal", editorType: 'spinner', type: 'number', width: 80},
+    {name: "value_int", title:"Geheel getal", editorType: 'spinner', type: 'number', width: 80},
+    {name: "value_text", title: "Tekst", type: "text", width: "*"},
+    {name: "cancelBtn", title: "Annuleren", type: "button", click: function(form) {
+        alarmItemFormWindow.closeClick();
+      }
+    },
+    {name: "storeBtn", title: "Klaar met bewerken", type: "button", click: function(form) {
+        if (form.validate()) {
+          var data = form.getValues();
+          if (data.alarm_type) {
+            data.object_id = data[data.alarm_type];
+          } else
+            data.object_id = null;
+        }
+
+        if (form.originalRecord) {
+          isc.addProperties(form.originalRecord, data);
+          alarmItemList.markForRedraw();
+        } else {
+          alarmItemList.addData(data);
+        }
+        alarmItemFormWindow.closeClick();
+      }
+    }
+  ]
+});
+
+
+var alarmItemFormWindow = isc.Window.create({
+  title: "Alarm regel",
+  autoSize: true,
+  canDragReposition: true,
+  canDragResize: true,
+  autoCenter: true,
+  isModal: true,
+  items: [
+    alarmItemForm
   ]
 });
 
@@ -115,110 +215,60 @@ var alarmItemList = isc.ListGrid.create({
   autoFitMaxRecords: 5,
   autoFitData: "vertical",
   alternateRecordStyles: true,
-  canEdit: true,
-  editEvent: "click",
+  showRecordComponents: true,
+  showRecordComponentsByCell: true,
+  canRemoveRecords: true,
   fields:[
     {name: "alarm_type", title: "alarm type", type: "text", width:80, valueMap: ['timeseries', 'location', 'logical group']},
-    {
-      name: "object_id", title: "object_id", type: "text", width:50/*,
-      editorType: 'DefaultSelectItem',
-      pickListWidth:400,
-      pickListProperties: {
-        showFilterEditor:true,
-        dataPageSize: 20
-      },
-      autoFetchData: false,
-      valueField: 'id',
-      displayField: 'name',
-      optionDataSource: alarmLogicalGroupDS,
-      editorEnter: function(r) {
-        debugger;
-      },
-      pickListFields:[
-        {name: 'uuid', width: 100},
-        {name: 'name'}
-      ]*/
-    },
+    {name: "object_id", title: "object_id", type: "text", width:50},
     {name: "id", title:"id", showIf: function() { return false; }},
     {name: "name", title:"Naam", showIf: function() { return false; }},
-    {name: 'logical_check', title: 'wat', valueMap: ['All', 'At least one'], width: 50},
-    {name: "value_type", title:"controle op", valueMap: ['a. Waarde', 'b. Status - Aantal metingen',
-      'c. Status - Percentage betrouwbare waarden',
-      'd. Status - Percentage twijfelachtige waarden', 'e. Status - Percentage onbetrouwbare waarden',
-      'f. Status - Minimum meetwaarde', 'g. Status - Maximum meetwaarde', 'h. Status - Gemiddelde meetwaarde',
-      'i. Status - Standaard deviatie', 'j. Status - Tijd sinds laatste meting',
-      'k. Status - Procentuele afwijking van het aantal te verwachten metingen']
-    },
-    {name: 'comparision', title: 'vergelijking', valueMap: ['==', '!=', '>', '<'], width: 50},
+    {name: 'logical_check', title: 'wat', width: 50},
+    {name: "value_type", title:"controle op"},
+    {name: 'comparision', title: 'vergelijking', width: 50},
     {name: "value_double", title:"decimaal", type: 'number', width: 50},
     {name: "value_int", title:"geheel getal", type: 'number', width: 50},
     {name: "value_text", title: "tekst", type: "text", width: 80},
-    {name: "value_bool", title: "ja/nee", type: "boolean", width:50}
-  ]
+    {name: "edit_field", title: "bewerk", width: 90, align: "center"}
+    //,{name: "value_bool", title: "ja/nee", type: "boolean", width:50}
+  ],
+  createRecordComponent : function (record, colNum) {
+     var fieldName = this.getFieldName(colNum);
+    if (fieldName == "edit_field") {
+      var button = isc.IButton.create({
+        height: 18,
+        width: 80,
+        icon: static_media_root + "ddsc_api/management/images/comment_edit.png",
+        title: "Bewerk",
+        click : function () {
+          record['logical group'] = null;
+          record['timeseries'] = null;
+          record['location'] = null;
+          if (record.alarm_type) {
+              record[record.alarm_type] = record.object_id;
+          }
+          alarmItemFormWindow.show();
+          alarmItemForm.setData(record);
+          alarmItemForm.originalRecord = record;
+        }
+      });
+      return button;
+    }
+    return null;
+  }
 });
 
 
 var saveAlarm = function(saveAsNew) {
-  //todo: validation
-
   var data = alarmForm.getData();
   data.alarm_item_set = alarmItemList.getData();
 
-  if (saveAsNew || !data.id) {
-    //alarmForm.setValue('id', null);
-    //alarmForm.setValue('url', null);
-    delete data.id;
-    delete data.url;
-    //todo: set alarmItem id's on null
-    var method = 'POST';
-    var url = settings.alarm_settings_url;
-  } else {
-    var method = 'PUT';
-    var url = data.url;
-  }
-  alarmForm.setErrors([]);
-
-
-  RPCManager.sendRequest({
-    actionURL: url,
-    httpMethod: method,
-    data: data,
-    params: data,
-    httpHeaders: {
-      'X-CSRFToken': document.cookie.split('=')[1]
-    },
-    callback: function(rpcResponse, data, rpcRequest) {
-
-      if (rpcResponse.httpResponseCode == 200 || rpcResponse.httpResponseCode == 201) {
-        console.log('Gelukt');
-        var data = isc.JSON.decode(data);
-        alarmForm.setData(data);
-        alarmItemList.setData(data.alarm_item_set);
-        alarmList.fetchData({test: timestamp()}); //force new fetch with timestamp
-        if (rpcResponse.httpResponseCode == 201) {
-          //in case of create, the list serializer is used for the return. do extra fetch to get details
-          RPCManager.sendRequest({
-            actionURL: data.url,
-            httpMethod: 'GET',
-            callback: function(rpcResponse, data, rpcRequest) {
-              data = isc.JSON.decode(data);
-              alarmForm.setData(data);
-              alarmItemList.setData(data.alarm_item_set);
-            }
-          });
-        }
-
-      } else if (rpcResponse.httpResponseCode == 400) {
-        alarmForm.setErrors(isc.JSON.decode(rpcResponse.httpResponseText), true);
-        alert('validatie mislukt');
-
-      } else {
-        alert('Opslaan mislukt. ' + data);
-      }
-    }
+  saveObject(alarmForm, data, settings.alarm_settings_url, {
+    saveAsNew: saveAsNew,
+    reloadList: alarmItemList,
+    setFormData: setAlarmFormData
   });
 }
-
 
 alarmPage = isc.HLayout.create({
   autoDraw: false,
@@ -226,21 +276,18 @@ alarmPage = isc.HLayout.create({
     alarmList,
     isc.VLayout.create({
       padding: 10,
+      membersMargin: 10,
       members: [
         alarmForm,
         alarmItemList,
         isc.HLayout.create({
           members: [
             isc.IButton.create({
-              title:"Regel toevoegen",
-              click:"alarmItemList.startEditingNew()"
-            }),
-            isc.IButton.create({
-              title:"Regel verwijderen",
-              click: function() {
-                if (alarmItemList.getSelectedRecord()) {
-                  alarmItemList.data.remove(alarmItemList.getSelectedRecord());
-                }
+              title: "Regel toevoegen",
+              click: function () {
+                alarmItemForm.setData([]);
+                alarmItemForm.originalRecord = null;
+                alarmItemFormWindow.show();
               }
             })
           ]

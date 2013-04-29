@@ -25,7 +25,7 @@ var accessGroupDS = isc.DataSource.create({
 
 var setAgFormData = function(data) {
   agTimeseriesSelectionGrid.setData(data.timeseries);
-
+  agAccessGroupOverview.setData(data.permission_mappers);
   delete data['timeseries'];
   accessGroupForm.setData(data);
   accessGroupForm.setErrors([]);
@@ -34,7 +34,7 @@ var setAgFormData = function(data) {
 
 var accessGroupGrid = isc.ListGrid.create({
   //ID: "alarmList",
-  width:400,
+  width: 300,
   alternateRecordStyles:true,
   autoFetchData: true,
   dataSource: accessGroupDS,
@@ -57,9 +57,9 @@ var accessGroupGrid = isc.ListGrid.create({
 var accessGroupForm = isc.DynamicForm.create({
   dataSource: accessGroupDS,
   numCols: 2,
-  colWidths: [100, 250],
+  colWidths: [100, 300],
   fields: [
-    {type: 'header', defaultValue: "Toegangs Groep", width: "*"},
+    {type: 'header', defaultValue: "Toegangsgroep", width: "*"},
     {name: "id", title:"id", type: 'integer', canEdit: false},
     //{name: "url", title: "Url", canEdit: false},
     {name: "name", width: "*"},
@@ -84,9 +84,22 @@ var accessGroupForm = isc.DynamicForm.create({
   ]
 });
 
+var agAccessGroupOverview = isc.ListGrid.create({
+  width: 400,
+  alternateRecordStyles:true,
+  autoFitMaxRecords: 5,
+  autoFitData: "vertical",
+  fields:[
+    {name:"id", title:"id", showIf: "return false"},
+    {name:"user_group", title:"Gebruikersgroep (alleen lezen)"},
+    {name:"permission_group", title:"Rol"},
+    {name:"name", title:"Naam (optioneel)", showIf: "return false"}
+  ]
+});
+
 
 var agTimeseriesSelectionGrid = isc.ListGrid.create({
-
+  width: 400,
   alternateRecordStyles:true,
   canReorderRecords: true,
   canAcceptDroppedRecords: true,
@@ -94,7 +107,7 @@ var agTimeseriesSelectionGrid = isc.ListGrid.create({
   fields:[
     {name:"id", title:"id", showIf: "return false"},
     {name:"url", title:"Url", showIf: "return false"},
-    {name:"name", title:"Name"}
+    {name:"name", title:"Gselecteerde tijdseries - Naam"}
   ]
 });
 
@@ -119,25 +132,19 @@ var agTimeseriesDS = isc.FilterPaginatedDataSource.create({
 });
 
 
-var agTimeseries = isc.ListGrid.create({
-  alternateRecordStyles:true,
-  showFilterEditor: true,
-  autoFetchData: true,
+var agTimeseries = isc.DefaultListGrid.create({
   dataSource: agTimeseriesDS,
   canDragRecordsOut: true,
   dragDataAction: 'copy',
   dataProperties:{
     disableCacheSync: true
   },
-  canReorderFields: true,
-  dataPageSize: 50,
-  drawAheadRatio: 2
+  canReorderFields: true
 });
 
 //#####################################################################################################################
 
 var saveAccessGroup = function(saveAsNew) {
-  //todo: validation
   var data = accessGroupForm.getData();
   var timeseries = agTimeseriesSelectionGrid.getData();
 
@@ -147,54 +154,27 @@ var saveAccessGroup = function(saveAsNew) {
   }
   data.timeseries = timeseries_ids;
 
-  if (saveAsNew || !data.id) {
-    delete data.id;
-    delete data.url;
-    //todo: set alarmItem id's on null
-    var method = 'POST';
-    var url = settings.datasets_url;
-  } else {
-    var method = 'PUT';
-    var url = data.url;
-  }
-  accessGroupForm.setErrors([]);
-
-  RPCManager.sendRequest({
-    actionURL: url,
-    httpMethod: method,
-    data: data,
-    params: data,
-    httpHeaders: {
-      'X-CSRFToken': document.cookie.split('=')[1]
-    },
-    callback: function(rpcResponse, data, rpcRequest) {
-
-      if (rpcResponse.httpResponseCode == 200 || rpcResponse.httpResponseCode == 201) {
-        console.log('gelukt');
-        var data = isc.JSON.decode(data);
-        setAgFormData(data)
-        accessGroupGrid.fetchData({test: timestamp()}); //force new fetch with timestamp
-      } else if (rpcResponse.httpResponseCode == 400) {
-        accessGroupForm.setErrors(isc.JSON.decode(rpcResponse.httpResponseText), true);
-        alert('validatie mislukt');
-      } else {
-        alert('Opslaan mislukt.');
-      }
-    }
+  saveObject(accessGroupForm, data, settings.datasets_url, {
+    saveAsNew: saveAsNew,
+    reloadList: timeseriesList,
+    setFormData: setAgFormData
   });
 }
-
 
 accessGroupPage = isc.HLayout.create({
   members: [
     accessGroupGrid,
     isc.VLayout.create({
       width: 300,
+      padding: 10,
+      membersMargin: 10,
+      defaultLayoutAlign: 'fill',
       members: [
         accessGroupForm,
+        agAccessGroupOverview,
         agTimeseriesSelectionGrid,
         isc.HLayout.create({
-          height: 30,
+          height: 20,
           members: [
             isc.IButton.create({
               title: 'Annuleren',
@@ -245,12 +225,12 @@ accessGroupPage = isc.HLayout.create({
       ]
     }),
     isc.VStack.create({width:32, height:74, layoutAlign:"center", membersMargin:10, members:[
-      isc.Img.create({src:"/static_media/ddsc_api/management/images/arrow_left.png", width:32, height:32,
+      isc.Img.create({src: static_media_root + "ddsc_api/management/images/arrow_left.png", width:32, height:32,
         click: function() {
           agTimeseriesSelectionGrid.transferSelectedData(agTimeseries);
         }
       }),
-      isc.Img.create({src:"/static_media/ddsc_api/management/images/arrow_right.png", width:32, height:32,
+      isc.Img.create({src: static_media_root + "ddsc_api/management/images/arrow_right.png", width:32, height:32,
         click: function() {
           if (agTimeseriesSelectionGrid.getSelectedRecords()) {
             agTimeseriesSelectionGrid.data.removeAll(agTimeseriesSelectionGrid.getSelectedRecords());

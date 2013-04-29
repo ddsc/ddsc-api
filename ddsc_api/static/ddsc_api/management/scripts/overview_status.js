@@ -22,11 +22,8 @@ var statusDS = isc.FilterPaginatedDataSource.create({
 });
 
 
-var statusList = isc.ListGrid.create({
+var statusList = isc.DefaultListGrid.create({
   width: 900,
-  alternateRecordStyles: true,
-  autoFetchData: true,
-  showFilterEditor: true,
   dataSource: statusDS,
   rowClick: function(record) {
     RPCManager.sendRequest({
@@ -37,10 +34,7 @@ var statusList = isc.ListGrid.create({
         statusForm.setData(data);
       }
     });
-  },
-  //canReorderFields: true,
-  dataPageSize: 30,
-  drawAheadRatio: 2
+  }
 });
 
 
@@ -71,6 +65,7 @@ var statusForm = isc.DynamicForm.create({
 
 
 statusPage = isc.HLayout.create({
+  membersMargin: 10,
   members: [
     statusList,
     statusForm

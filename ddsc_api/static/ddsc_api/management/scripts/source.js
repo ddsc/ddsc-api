@@ -3,15 +3,17 @@ var sourceDS = isc.FilterPaginatedDataSource.create({
   dataURL: settings.sources_url,
   fields:[
     {name: 'id', title: 'id', hidden: true},
-    {name: 'uuid', title: 'UUID'},
+    {name: 'uuid', title: 'UUID', width: 100},
     {name: 'name', title: 'Naam'},
-    {name: 'source_type', title: 'Bron type', valueMap: ['Calculated', 'Sensor', 'Simulated', 'Derived']},
-    {name: 'manufacturer', title: 'Leverancier'},
-    {name: 'details', title: 'Beschrijving'},
-    {name: 'frequency', title: 'Verwachte inwin frequentie (s)'},
-    {name: 'timeout', title: 'Tijd tot attentie (s)'}
+    {name: 'source_type', title: 'Bron type', valueMap: ['Calculated', 'Sensor', 'Simulated', 'Derived'],
+      canFilter: false, width: 100},
+    {name: 'manufacturer', title: 'Leverancier', width: 100},
+    {name: 'details', title: 'Beschrijving', hidden: true},
+    {name: 'frequency', title: 'Inwin frequentie (s)', width: 80},
+    {name: 'timeout', title: 'Attentie tijd (s)', width: 80}
   ]
 });
+
 
 var setSourceFormData = function(data) {
   sourceForm.setData(data);
@@ -19,18 +21,12 @@ var setSourceFormData = function(data) {
 }
 
 
-var sourceList = isc.ListGrid.create({
+var sourceList = isc.DefaultListGrid.create({
   width:700,
-  alternateRecordStyles:true,
-  autoFetchData: true,
   dataSource: sourceDS,
-  showFilterEditor: true,
   rowClick: function(record) {
     setSourceFormData(record);
-  },
-  canReorderFields: true,
-  dataPageSize: 50,
-  drawAheadRatio: 2
+  }
 });
 
 
@@ -46,67 +42,38 @@ var manufacturerDS = isc.FilterPaginatedDataSource.create({
 
 var sourceForm = isc.DynamicForm.create({
   dataSource: sourceDS,
-  width: 300,
+  width: 350,
   numCols: 2,
-  colWidths: [100, 200],
+  colWidths: [100, 250],
   fields: [
-    {type: 'header', defaultValue: 'Bron instellingen'},
-    {name: 'id', title: 'id', canEdit: false},
-    {name: 'name'},
-    {name: 'source_type'},
+    {type: 'header', defaultValue: 'Bron instellingen', width: '*'},
+    {name: 'id', title: 'id', canEdit: false, width: '*'},
+    {name: 'uuid', title: 'uuid', canEdit: false, width: '*'},
+    {name: 'name', width: '*'},
+    {name: 'source_type', width: '*'},
     {name: 'manufacturer', type: 'combo', valueField: 'name', displayField: 'name',
-      optionDataSource: manufacturerDS},
-    {name: 'details', type: 'textArea'},
-    {name: 'frequency', type: 'spinner', minValue: 0},
-    {name: 'timeout', type: 'spinner', minValue: 0}
+      optionDataSource: manufacturerDS, width: '*'},
+    {name: 'details', type: 'textArea', width: '*'},
+    {name: 'frequency', type: 'spinner', minValue: 1},
+    {name: 'timeout', type: 'spinner', minValue: 1}
   ]
 });
 
 
 var saveSource = function(saveAsNew) {
-  //todo: validation
-
   var data = sourceForm.getData();
 
-  if (saveAsNew || !data.uuid) {
-    delete data.uuid;
-    delete data.url;
-    var method = 'POST';
-    var url = settings.sources_url;
-  } else {
-    var method = 'PUT';
-    var url = data.url;
-  }
-  sourceForm.setErrors([]);
-
-  RPCManager.sendRequest({
-    actionURL: url,
-    httpMethod: method,
-    data: data,
-    params: data,
-    httpHeaders: {
-      'X-CSRFToken': document.cookie.split('=')[1]
-    },
-    callback: function(rpcResponse, data, rpcRequest) {
-
-      if (rpcResponse.httpResponseCode == 200 || rpcResponse.httpResponseCode == 201) {
-        console.log('Gelukt');
-        var data = isc.JSON.decode(data);
-        setSourceFormData(data);
-        sourceList.fetchData({test: timestamp()}); //force new fetch with timestamp
-      } else if (rpcResponse.httpResponseCode == 400) {
-        sourceForm.setErrors(isc.JSON.decode(rpcResponse.httpResponseText), true);
-        alert('validatie mislukt.');
-      } else {
-        alert('Opslaan mislukt.');
-      }
-    }
+  saveObject(sourceForm, data, settings.sources_url, {
+    saveAsNew: saveAsNew,
+    idField: 'uuid',
+    reloadList: sourceList
   });
 }
 
 
 sourcePage = isc.HLayout.create({
   autoDraw: false,
+  minWidth: 1050,
   members: [
     sourceList,
     isc.VLayout.create({

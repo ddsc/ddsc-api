@@ -42,10 +42,26 @@ var logicalGroupDS = isc.DataSource.create({
   }
 });
 
+var setLogicalGroupFormData = function(data) {
+
+  timeseriesSelectionGrid.setData(data.timeseries);
+
+  delete data['timeseries'];
+  delete data['childs'];
+
+  var parent_ids = []
+  for (var i=0; i<data.parents.length; i++) {
+    parent_ids.push(data.parents[i].parent_id);
+  }
+  data.parents = parent_ids;
+  logicalGroupForm.setData(data);
+  logicalGroupForm.setErrors([]);
+}
+
 
 var logicalGroupTree = isc.TreeGrid.create({
   dataSource: logicalGroupDS,
-  width: 400,
+  width: 300,
   canReorderRecords: true,
   canAcceptDroppedRecords: true,
   autoFetchData:true,
@@ -64,19 +80,8 @@ var logicalGroupTree = isc.TreeGrid.create({
       actionURL: record._url,
       httpMethod: 'GET',
       callback: function(rpcResponse, data, rpcRequest) {
-        var json_data = isc.JSON.decode(rpcResponse.data);
-        timeseriesSelectionGrid.setData(json_data.timeseries);
-
-        delete json_data['timeseries'];
-        delete json_data['childs'];
-
-        var parent_ids = []
-        for (var i=0; i<json_data.parents.length; i++) {
-          parent_ids.push(json_data.parents[i].parent_id);
-        }
-        json_data.parents = parent_ids;
-        logicalGroupForm.setData(json_data);
-        logicalGroupForm.setErrors([]);
+        var data = isc.JSON.decode(rpcResponse.data);
+        setLogicalGroupFormData(data);
       }
     });
   }
@@ -87,11 +92,10 @@ var logicalGroupTree = isc.TreeGrid.create({
 var logicalGroupForm = isc.DynamicForm.create({
   dataSource: logicalGroupDS,
   numCols: 2,
-  colWidths: [100, 250],
+  colWidths: [100, 300],
   fields: [
     {type: 'header', defaultValue: "Logische Groep", width: "*"},
     {name: "id", title:"id", type: 'integer', canEdit: false},
-    {name: "url", title: "Url", canEdit: false /*editorType: 'hiddenField'*/},
     {name: "name", width: "*"},
     {
       name: "owner", type: "combo",
@@ -135,6 +139,7 @@ var logicalGroupForm = isc.DynamicForm.create({
 
 
 var timeseriesSelectionGrid = isc.ListGrid.create({
+  width: 400,
   alternateRecordStyles:true,
   canReorderRecords: true,
   canAcceptDroppedRecords: true,
@@ -142,7 +147,7 @@ var timeseriesSelectionGrid = isc.ListGrid.create({
   fields:[
     {name:"id", title:"id", showIf: "return false"},
     {name:"url", title:"Url", showIf: "return false"},
-    {name:"name", title:"Name"}
+    {name:"name", title:"Gselecteerde tijdseries - Naam"}
   ]
 });
 
@@ -167,33 +172,24 @@ var lgTimeseriesDS = isc.FilterPaginatedDataSource.create({
 });
 
 
-var lgTimeseries = isc.ListGrid.create({
+var lgTimeseries = isc.DefaultListGrid.create({
   //width:700,
-  autoDraw: false,
-  alternateRecordStyles:true,
-  showFilterEditor: true,
-  autoFetchData: true,
   dataSource: lgTimeseriesDS,
   canDragRecordsOut: true,
   dragDataAction: 'copy',
   dataProperties:{
     disableCacheSync: true
   },
-  canReorderFields: true,
-  dataPageSize: 50,
-  drawAheadRatio: 2
+  canReorderFields: true
 });
 
 //#####################################################################################################################
 
 var saveLogicalGroup = function(saveAsNew) {
-  //todo: validation
-
   var data = logicalGroupForm.getData();
   var timeseries = timeseriesSelectionGrid.getData();
   //var parents = parentSelectionGrid.getData();
 
-  //todo: bug with parent field in post
   var parents = [];
   for (var i=0; i<data.parents.length; i++) {
     parents.push({parent: data.parents[i]});
@@ -206,49 +202,10 @@ var saveLogicalGroup = function(saveAsNew) {
   }
   data.timeseries = timeseries_ids;
 
-  if (saveAsNew || !data.id) {
-    //logicalGroupForm.setValue('id', null);
-    //logicalGroupForm.setValue('url', null);
-    delete data.id;
-    delete data.url;
-    //todo: set alarmItem id's on null
-    var method = 'POST';
-    var url = settings.logicalgroups_url;
-  } else {
-    var method = 'PUT';
-    var url = data.url;
-  }
-  alarmForm.setErrors([]);
-
-  RPCManager.sendRequest({
-    actionURL: url,
-    httpMethod: method,
-    data: data,
-    params: data,
-    httpHeaders: {
-      'X-CSRFToken': document.cookie.split('=')[1]
-    },
-    callback: function(rpcResponse, data, rpcRequest) {
-
-      if (rpcResponse.httpResponseCode == 200 || rpcResponse.httpResponseCode == 201) {
-        console.log('gelukt');
-        var data = isc.JSON.decode(data);
-        var parent_ids = []
-        for (var i=0; i<data.parents.length; i++) {
-          parent_ids.push(data.parents[i].parent_id);
-        }
-        data.parents = parent_ids;
-        logicalGroupForm.setData(data);
-        logicalGroupForm.setErrors([]);
-        timeseriesSelectionGrid.setData(data.alarm_item_set);
-        logicalGroupTree.fetchData({test: timestamp()}); //force new fetch with timestamp
-      } else if (rpcResponse.httpResponseCode == 400) {
-        logicalGroupForm.setErrors(isc.JSON.decode(rpcResponse.httpResponseText), true);
-        alert('validatie mislukt');
-      } else {
-        alert('Opslaan mislukt.');
-      }
-    }
+  saveObject(accessGroupForm, data, settings.logicalgroups_url, {
+    saveAsNew: saveAsNew,
+    reloadList: logicalGroupTree,
+    setFormData: setLogicalGroupFormData(data)
   });
 }
 
@@ -258,11 +215,13 @@ logicalGroupPage = isc.HLayout.create({
     logicalGroupTree,
     isc.VLayout.create({
       width: 400,
+      padding: 10,
+      membersMargin: 10,
       members: [
         logicalGroupForm,
         timeseriesSelectionGrid,
         isc.HLayout.create({
-          height: 30,
+          height: 20,
           members: [
             isc.IButton.create({
               title: 'Annuleren',
@@ -286,13 +245,6 @@ logicalGroupPage = isc.HLayout.create({
               title: 'Opslaan',
               click: function() {
                 saveLogicalGroup(false);
-              }
-            }),
-            isc.IButton.create({
-              title: 'Opslaan als nieuw',
-              width: 150,
-              click: function() {
-                saveLogicalGroup(true);
               }
             }),
             isc.IButton.create({
@@ -322,12 +274,12 @@ logicalGroupPage = isc.HLayout.create({
       ]
     }),
     isc.VStack.create({width:32, height:74, layoutAlign:"center", membersMargin:10, members:[
-      isc.Img.create({src:"/static_media/ddsc_api/management/images/arrow_left.png", width:32, height:32,
+      isc.Img.create({src: static_media_root + "ddsc_api/management/images/arrow_left.png", width:32, height:32,
         click: function() {
           timeseriesSelectionGrid.transferSelectedData(lgTimeseries);
         }
       }),
-      isc.Img.create({src:"/static_media/ddsc_api/management/images/arrow_right.png", width:32, height:32,
+      isc.Img.create({src: static_media_root + "ddsc_api/management/images/arrow_right.png", width:32, height:32,
         click: function() {
           if (timeseriesSelectionGrid.getSelectedRecords()) {
             timeseriesSelectionGrid.data.removeAll(timeseriesSelectionGrid.getSelectedRecords());

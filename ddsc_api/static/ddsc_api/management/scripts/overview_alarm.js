@@ -12,16 +12,14 @@ var activeAlarmDS = isc.FilterPaginatedDataSource.create({
     {name: "message", title:"bericht"},
     //{name: "active_status", title: "actief", type: "boolean", width:35},
     {name: "alarm.object_id", title:"user_id", width: 50, hidden: true},
-    {name: "alarm.urgency", title:"Urgentie", width: 50, valueMap: ['High', 'Low']},
-    {name: "alarm.message_type", title: "Notificatie", width: 80, valueMap: ['Email', 'SMS', 'Email and SMS'], hidden: true}
+    {name: "alarm.urgency", title:"Urgentie", width: 50},
+    {name: "alarm.message_type", title: "Notificatie", width: 80, hidden: true}
   ]
 });
 
 
-var activeAlarmList = isc.ListGrid.create({
+var activeAlarmList = isc.DefaultListGrid.create({
   width: 700,
-  alternateRecordStyles: true,
-  autoFetchData: true,
   dataSource: activeAlarmDS,
   rowClick: function(record) {
     RPCManager.sendRequest({
@@ -32,8 +30,7 @@ var activeAlarmList = isc.ListGrid.create({
         activeAlarmForm.setData(data);
       }
     });
-  },
-  canReorderFields: true
+  }
 });
 
 
@@ -59,6 +56,7 @@ var activeAlarmForm = isc.DynamicForm.create({
 
 
 activeAlarmPage = isc.HLayout.create({
+  membersMargin: 10,
   members: [
     activeAlarmList,
     activeAlarmForm

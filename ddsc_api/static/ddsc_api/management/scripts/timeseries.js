@@ -20,13 +20,13 @@ var timeseriesDS = isc.FilterPaginatedDataSource.create({
     {name: 'description', title: 'Beschrijving', hidden: true},
     {
       name: 'value_type', title: 'Waarde type', valueMap: ['integer', 'float', 'text', 'image',
-      'georeferenced remote sensing', 'movie', 'file'], canFilter: false
+      'georeferenced remote sensing', 'movie', 'file'], canFilter: false, hidden: true
     },
     {name: 'source', title: 'Bron systeem', hidden: true},//fk
     {name: 'owner', title: 'Data eigenaar'},//fk
     {name: 'location.name', title: 'Locatie'},//fk
     {name: 'parameter', title: 'Parameter'},//aquo
-    {name: 'unit', title: 'Eenheid'},//aquo
+    {name: 'unit', title: 'Eenheid', hidden: true},//aquo
     {name: 'reference_frame', title: 'Hoedaningheid', hidden: true},
     {name: 'compartment', title: 'Compartiment', hidden: true},
     {name: 'measuring_device', title: 'Meetapperatuur', hidden: true},
@@ -40,8 +40,8 @@ var timeseriesDS = isc.FilterPaginatedDataSource.create({
     {name: 'validate_diff_hard', title: 'Harde maximale verandering', hidden: true},
     {name: 'validate_diff_soft', title: 'Zachte maximale verandering', hidden: true},
 
-    {name: 'first_value_timestamp', title: 'Verwerkingsmethode', hidden: true},//read only
-    {name: 'latest_value', title: 'Laatste waarde'},//read only
+    {name: 'first_value_timestamp', title: 'Verwerkingsmethode', hidden: true},
+    {name: 'latest_value', title: 'Laatste waarde', canFilter: false, canSort: false},
     {name: 'latest_value_timestamp', title: 'Tijdstip laatste waarde'},
     {name: 'supplying_systems', title: 'id_mapping', hidden: true}
   ]
@@ -66,13 +66,9 @@ var setTimeseriesFormData = function(data) {
 }
 
 
-var timeseriesList = isc.ListGrid.create({
+var timeseriesList = isc.DefaultListGrid.create({
   width:700,
-  alternateRecordStyles:true,
-  autoFetchData: true,
   dataSource: timeseriesDS,
-  showFilterEditor: true,
-
   rowClick: function(record) {
     RPCManager.sendRequest({
       actionURL: record.url,
@@ -82,10 +78,7 @@ var timeseriesList = isc.ListGrid.create({
         setTimeseriesFormData(data);
       }
     });
-  },
-  canReorderFields: true,
-  dataPageSize: 50,
-  drawAheadRatio: 2
+  }
 });
 
 
@@ -236,67 +229,21 @@ var timeseriesForm = isc.DynamicForm.create({
     {name: 'validate_diff_soft', editorType: 'spinner', step: 1},
 
     {type: 'header', defaultValue: 'Extra informatie'},
-    {name: 'first_value_timestamp', title: 'Tijdstip eerste waarde', canEdit: false},//read only
-    {name: 'latest_value', title: 'Laatste waarde', canEdit: false},//read only
+    {name: 'first_value_timestamp', title: 'Tijdstip eerste waarde', canEdit: false},
+    {name: 'latest_value', title: 'Laatste waarde', canEdit: false},
     {name: 'latest_value_timestamp', title: 'Tijdstip laatste waarde', canEdit: false}
   ]
 });
 
 
 var saveTimeseries = function(saveAsNew) {
-  //todo: validation
-
   var data = timeseriesForm.getData();
 
-  if (saveAsNew || !data.uuid) {
-    //alarmForm.setValue('id', null);
-    //alarmForm.setValue('url', null);
-    delete data.uuid;
-    delete data.url;
-    //todo: set alarmItem id's on null
-    var method = 'POST';
-    var url = settings.timeseries_url;
-  } else {
-    var method = 'PUT';
-    var url = data.url;
-  }
-  timeseriesForm.setErrors([]);
-
-
-  RPCManager.sendRequest({
-    actionURL: url,
-    httpMethod: method,
-    data: data,
-    params: data,
-    httpHeaders: {
-      'X-CSRFToken': document.cookie.split('=')[1]
-    },
-    callback: function(rpcResponse, data, rpcRequest) {
-
-      if (rpcResponse.httpResponseCode == 200 || rpcResponse.httpResponseCode == 201) {
-        console.log('Gelukt');
-        var data = isc.JSON.decode(data);
-        setTimeseriesFormData(data);
-        timeseriesList.fetchData({test: timestamp()}); //force new fetch with timestamp
-        if (rpcResponse.httpResponseCode == 201) {
-          //in case of create, the list serializer is used for the return. do extra fetch to get details
-          RPCManager.sendRequest({
-            actionURL: data.url,
-            httpMethod: 'GET',
-            callback: function(rpcResponse, data, rpcRequest) {
-              data = isc.JSON.decode(data);
-              setTimeseriesFormData(data);
-            }
-          });
-        }
-      } else if (rpcResponse.httpResponseCode == 400) {
-        timeserieForm.setErrors(isc.JSON.decode(rpcResponse.httpResponseText), true);
-        alert('validatie mislukt.');
-
-      } else {
-        alert('Opslaan mislukt.');
-      }
-    }
+  saveObject(timeseriesForm, data, settings.timeseries_url, {
+    saveAsNew: saveAsNew,
+    idField: 'uuid',
+    reloadList: timeseriesList,
+    setFormData: setTimeseriesFormData
   });
 }
 

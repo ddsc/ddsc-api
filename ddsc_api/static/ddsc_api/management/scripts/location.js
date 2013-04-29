@@ -10,18 +10,15 @@ var locationDS = isc.FilterPaginatedDataSource.create({
     {name:"name", title:"Naam"},
     {name:"description", title:"Beschrijving"},
     {name:"point_geometry", title:"punt geometrie"},
-    {name:"geometry_precision", title:"geometrie precisie"},
+    {name:"geometry_precision", title:"geometrie precisie", hidden: true},
     {name: "path", title: "path", type: "text", width: 80},
     {name: "depth", title: "diepte", type: "integer", width:50, hidden: true}
   ]
 });
 
-var locationList = isc.ListGrid.create({
+var locationList = isc.DefaultListGrid.create({
   width:700,
-  alternateRecordStyles:true,
-  showFilterEditor: true,
   dataSource: locationDS,
-  autoFetchData: true,
   rowClick: function(record) {
     RPCManager.sendRequest({
       actionURL: record.url,
@@ -31,11 +28,7 @@ var locationList = isc.ListGrid.create({
         locationForm.setErrors([]);
       }
     });
-  },
-  //canReorderFields: true,
-  useClientSorting:false,
-  dataPageSize: 50,
-  drawAheadRatio: 2
+  }
 });
 
 
@@ -57,57 +50,17 @@ var locationForm = isc.DynamicForm.create({
 });
 
 var saveLocation = function(saveAsNew) {
-
   var data = locationForm.getData();
 
   if (saveAsNew || !data.uuid) {
-    delete data.uuid;
-    delete data.url;
     delete data.path;
     delete data.depth;
-    //todo: set alarmItem id's on null
-    var method = 'POST';
-    var url = settings.locations_url;
-  } else {
-    var method = 'PUT';
-    var url = data.url;
   }
-  locationForm.setErrors([]);
 
-  RPCManager.sendRequest({
-    actionURL: url,
-    httpMethod: method,
-    data: data,
-    params: data,
-    httpHeaders: {
-      'X-CSRFToken': document.cookie.split('=')[1]
-    },
-    callback: function(rpcResponse, data, rpcRequest) {
-
-      if (rpcResponse.httpResponseCode == 200 || rpcResponse.httpResponseCode == 201) {
-        console.log('Gelukt');
-        var data = isc.JSON.decode(data);
-        locationForm.setData(data);
-        locationList.fetchData({test: timestamp()}); //force new fetch with timestamp
-        if (rpcResponse.httpResponseCode == 201) {
-          //in case of create, the list serializer is used for the return. do extra fetch to get details
-          RPCManager.sendRequest({
-            actionURL: data.url,
-            httpMethod: 'GET',
-            callback: function(rpcResponse, data, rpcRequest) {
-              data = isc.JSON.decode(data);
-              locationForm.setData(data);
-            }
-          });
-        }
-      } else if (rpcResponse.httpResponseCode == 400) {
-        locationForm.setErrors(isc.JSON.decode(rpcResponse.httpResponseText), true);
-        alert('validatie mislukt.');
-
-      } else {
-        alert('Opslaan mislukt.');
-      }
-    }
+  saveObject(locationForm, data, settings.locations_url, {
+    saveAsNew: saveAsNew,
+    idField: 'uuid',
+    reloadList: locationList
   });
 }
 
@@ -116,6 +69,7 @@ locationPage = isc.HLayout.create({
   members: [
     locationList,
     isc.VLayout.create({
+      padding: 10,
       members: [
         locationForm,
         isc.HLayout.create({
