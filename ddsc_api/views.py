@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-from ddsc_core.models import Timeseries
+from ddsc_core.models import IdMapping, Timeseries
 from dikedata_api import serializers
 from dikedata_api.views import write_events
 
@@ -41,6 +41,30 @@ class CSVUploadView(TemplateView):
                  'events':[{'datetime':row[0].strip('"'),
                             'value':row[2].strip('"')}]}
                 for row in content]
+
+        # DDSC UUIDs are expected, but we have to support "ID mapping" as well.
+        # First, assume an external (aka remote) ID. If it cannot be mapped
+        # on a timeseries, it is assumed to be a internal, DDSC UUID.
+
+        idmap = {}
+
+        for item in data:
+            if not item['uuid'] in idmap.keys():
+                try:
+                    obj = IdMapping.objects.get(
+                        user__username=request.user,
+                        remote_id=item['uuid']
+                    )
+                    idmap[obj.remote_id] = obj.timeseries.uuid
+                except IdMapping.DoesNotExist:
+                    if Timeseries.objects.filter(uuid=item['uuid']).exists():
+                        idmap[item['uuid']] = item['uuid']
+                    else:
+                        msg = "Onbekende tijdreeks: {}".format(item['uuid'])
+                        return self._response(msg, 404)
+
+        for item in data:
+            item['uuid'] = idmap[item['uuid']]
 
         serializer = serializers.MultiEventListSerializer(data=data)
 
