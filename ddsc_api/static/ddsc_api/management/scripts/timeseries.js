@@ -47,17 +47,34 @@ var timeseriesDS = isc.FilterPaginatedDataSource.create({
   ]
 });
 
+
+
+function take_attribute_or_null(obj, field) {
+  if (obj) {
+    if (typeof(obj) == 'object') {
+      if (field in obj) {
+        return obj[field];
+      }
+    } else {
+        return obj
+      }
+  }
+  return null
+}
+
 var setTimeseriesFormData = function(data) {
 
-  data.source = data.source.uuid
-  data.location = data.location.uuid
-  data.parameter = data.parameter.code
-  data.unit = data.unit.code
-  data.reference_frame = data.reference_frame.code
-  data.compartment = data.compartment.code
-  data.measuring_device = data.measuring_device.code
-  data.measuring_method = data.measuring_method.code
-  data.processing_method = data.processing_method.code
+  data.source = take_attribute_or_null(data.source, 'uuid');
+  data.location = take_attribute_or_null(data.location, 'uuid');
+
+
+  data.parameter = take_attribute_or_null(data.parameter, 'code');
+  data.unit = take_attribute_or_null(data.unit, 'code');
+  data.reference_frame = take_attribute_or_null(data.reference_frame, 'code');
+  data.compartment = take_attribute_or_null(data.compartment, 'code');
+  data.measuring_device = take_attribute_or_null(data.measuring_device, 'code');
+  data.measuring_method = take_attribute_or_null(data.measuring_method, 'code');
+  data.processing_method = take_attribute_or_null(data.processing_method, 'code');
 
   timeseriesForm.setData(data);
 

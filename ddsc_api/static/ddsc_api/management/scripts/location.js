@@ -7,9 +7,10 @@ var locationDS = isc.FilterPaginatedDataSource.create({
   fields:[
     {name:"url", title:"Url", hidden: true},
     {name:"uuid", title:"Uuid", hidden: true},
-    {name:"name", title:"Naam"},
-    {name:"description", title:"Beschrijving"},
+    {name:"name", title:"naam"},
+    {name:"description", title:"beschrijving"},
     {name:"point_geometry", title:"punt geometrie"},
+    {name:"srid", title:"SRID", hidden: true},
     {name:"geometry_precision", title:"geometrie precisie", hidden: true},
     {name: "path", title: "path", type: "text", width: 80},
     {name: "depth", title: "diepte", type: "integer", width:50, hidden: true}
@@ -43,6 +44,7 @@ var locationForm = isc.DynamicForm.create({
     {name:"name", width: '*'},
     {name:"description", type: 'TextArea', width: '*'},
     {name:"point_geometry", width: '*'},
+    {name:"srid"},
     {name:"geometry_precision", type: 'spinner'},
     {name: "path", width: '*', canEdit: false},
     {name: "depth", width: '*', canEdit: false}
@@ -60,7 +62,17 @@ var saveLocation = function(saveAsNew) {
   saveObject(locationForm, data, settings.locations_url, {
     saveAsNew: saveAsNew,
     idField: 'uuid',
-    reloadList: locationList
+    reloadList: locationList,
+    setFormData: function(data) {
+      locationForm.setErrors([]);
+      RPCManager.sendRequest({
+        actionURL: data.url,
+        httpMethod: 'GET',
+        callback: function(rpcResponse, data, rpcRequest) {
+          locationForm.setData(isc.JSON.decode(data));
+        }
+      });
+    }
   });
 }
 

@@ -26,9 +26,16 @@ var alarmDS = isc.RestDataSource.create({
     }
   },
   transformResponse: function(dsResponse) {
-    var json_data = isc.JSON.decode(dsResponse.data);
-    dsResponse.totalRows = json_data.length;
-    dsResponse.data = json_data;
+    if (dsResponse.httpResponseCode == 200) {
+      var json_data = isc.JSON.decode(dsResponse.data);
+      dsResponse.totalRows = json_data.length;
+      dsResponse.data = json_data;
+    } else {
+      dsResponse.status = -101;
+    }
+  },
+  handleError: function(dsRequest, dsResponse) {
+    userWarning('Error', 'Fout in ophalen van gegevens.', true);
   }
 });
 
@@ -167,7 +174,7 @@ var alarmItemForm = isc.DynamicForm.create({
     },
     {name: 'comparision', title: 'Logische controle', valueMap: ['==', '!=', '>', '<'], width: 80},
     {type: 'header', defaultValue: "Waarde(n) van tijdserie(s) binnen object"},
-    {name: "value_double", title:"Decimaal", editorType: 'spinner', type: 'number', width: 80},
+    {name: "value_double", title:"Decimaal", editorType: 'spinner', width: 80},
     {name: "value_int", title:"Geheel getal", editorType: 'spinner', type: 'number', width: 80},
     {name: "value_text", title: "Tekst", type: "text", width: "*"},
     {name: "cancelBtn", title: "Annuleren", type: "button", click: function(form) {
@@ -181,15 +188,15 @@ var alarmItemForm = isc.DynamicForm.create({
             data.object_id = data[data.alarm_type];
           } else
             data.object_id = null;
-        }
 
-        if (form.originalRecord) {
-          isc.addProperties(form.originalRecord, data);
-          alarmItemList.markForRedraw();
-        } else {
-          alarmItemList.addData(data);
+          if (form.originalRecord) {
+            isc.addProperties(form.originalRecord, data);
+            alarmItemList.markForRedraw();
+          } else {
+            alarmItemList.addData(data);
+          }
+          alarmItemFormWindow.closeClick();
         }
-        alarmItemFormWindow.closeClick();
       }
     }
   ]
@@ -261,12 +268,32 @@ var alarmItemList = isc.ListGrid.create({
 
 var saveAlarm = function(saveAsNew) {
   var data = alarmForm.getData();
-  data.alarm_item_set = alarmItemList.getData();
+  var alarm_items = alarmItemList.getData();
+  alarm_items.every( function(item) {
+    for (atr in item) {
+      if (atr.startsWith('_')) {
+        delete item[atr];
+      }
+    }
+  });
+  data.alarm_item_set =alarm_items
 
   saveObject(alarmForm, data, settings.alarm_settings_url, {
     saveAsNew: saveAsNew,
-    reloadList: alarmItemList,
-    setFormData: setAlarmFormData
+    reloadList: alarmList,
+    setFormData: setAlarmFormData,
+    extraValidationMessage: function(data) {
+      if (data.alarm_item_set) {
+        message = 'Invoer fout in alarm_items, met de volgende meldingen: <br>'
+        for (var i=0; i<data.alarm_item_set.length; i++) {
+          for (key in data.alarm_item_set[i]) {
+            message += "Veld: '" + key + "', melding: '" + data.alarm_item_set[i][key]+ "'<br>"
+          }
+        }
+        return message
+      }
+      return ''
+    }
   });
 }
 

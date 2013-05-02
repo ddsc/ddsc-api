@@ -97,10 +97,10 @@ isc.FilterPaginatedDataSource.addProperties({
     }
   },
   handleError: function(dsRequest, dsResponse) {
-    debugger;
     userWarning('Error', 'Fout in ophalen van gegevens.', true);
   }
 });
+
 
 //
 // class: DefaultSelectItem
@@ -164,7 +164,9 @@ function saveObject(form, data, post_url, options) {
       form.setData(data);
       form.setErrors([]);
     },
-    reloadList: null
+    reloadList: null,
+    extraValidationMessage: null,
+    postSave: null
   }
   options = isc.addProperties(default_options, options)
 
@@ -213,9 +215,13 @@ function saveObject(form, data, post_url, options) {
         //show validation errors
         var data = isc.JSON.decode(rpcResponse.httpResponseText);
         form.setErrors(data, true);
-        var message = 'Validatie fout. Voer de gegevens juist in en sla het nog een keer op. '
+
+        var message = 'Validatie fout. Voer de gegevens juist in en sla het nog een keer op. ';
         if (data && data['detail']) {
-          message = message + data['detail']
+          message = message + data['detail'] + extra_message;
+        }
+        if (options.extraValidationMessage) {
+          message += options.extraValidationMessage(data);
         }
         userWarning('Validatie', message, false);
       } else {

@@ -5,18 +5,18 @@ var statusDS = isc.FilterPaginatedDataSource.create({
   fields:[
     {name: "id", title:"id", hidden: true},
     {name: "url", title:"url", hidden: true},
-    {name: "status_date", title:"Actief"},
-    {name: "timeseries.name", title:"Naam"},
+    {name: "status_date", title:"Datum"},
+    {name: "timeseries.name", title:"Naam", width: 150},
     {name: "timeseries.location.name", title:"Locatie Naam", hidden: true},
     {name: "timeseries.parameter", title:"Parameter code"},
     {name: "timeseries.unit", title:"Eenheids code", hidden: true},
-    {name: "nr_of_measurements_total", title:"Aantal metingen"},
-    {name: "nr_of_measurements_reliable", title:"Nr betrouwbaar"},
-    {name: "nr_of_measurements_doubtful", title:"Nr twijfelachtig"},
-    {name: "nr_of_measurements_unreliable", title:"Nr onbetrouwbaar"},
-    {name: "min_val", title:"Min"},
-    {name: "max_val", title:"Max"},
-    {name: "mean_val", title:"Gemiddelde"},
+    {name: "nr_of_measurements_total", title:"Aantal metingen", canFilter: false},
+    {name: "nr_of_measurements_reliable", title:"Nr betrouwbaar", canFilter: false},
+    {name: "nr_of_measurements_doubtful", title:"Nr twijfelachtig", canFilter: false},
+    {name: "nr_of_measurements_unreliable", title:"Nr onbetrouwbaar", canFilter: false},
+    {name: "min_val", title:"Min", canSort: false, canFilter: false},
+    {name: "max_val", title:"Max", canSort: false, canFilter: false},
+    {name: "mean_val", title:"Gemiddelde", canSort: false, canFilter: false},
     {name: "std_val", title:"Standaard deviatie", hidden:true}
   ]
 });
@@ -25,6 +25,8 @@ var statusDS = isc.FilterPaginatedDataSource.create({
 var statusList = isc.DefaultListGrid.create({
   width: 900,
   dataSource: statusDS,
+  sortField: 'status_date',
+  sortDirection: Array.DESCENDING,
   rowClick: function(record) {
     RPCManager.sendRequest({
       actionURL: record.url,
@@ -46,12 +48,9 @@ var statusForm = isc.DynamicForm.create({
   fields: [
     {type: 'header', defaultValue: "Details Status"},
     {name: "id", width: "*", canEdit: false},
-    {name: "url", width: "*", canEdit: false},
     {name: "status_date", width: "*"},
     {name: "timeseries.name", width: "*"},
-    {name: "timeseries.location.name", width: "*"},
     {name: "timeseries.parameter", width: "*"},
-    {name: "timeseries.unit", width: "*"},
     {name: "nr_of_measurements_total", width: "*"},
     {name: "nr_of_measurements_reliable", width: "*"},
     {name: "nr_of_measurements_doubtful", width: "*"},
