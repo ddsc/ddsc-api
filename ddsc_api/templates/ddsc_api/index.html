@@ -50,7 +50,7 @@
     <script src={{ STATIC_URL }}ddsc_api/management/scripts/overview_annotation.js></script>
 
     {% csrf_token %}
-    <div style="text-align: left">loading....</div>
+    <div style="text-align: left"><br><br>loading....</div>
 
 
     <script>
@@ -63,11 +63,8 @@
         height: '100%',
         minHeight: '700',
         overflow: 'visible',
-        selectedTab: 1,
-        tabs: [{
-            title: 'Overzicht',
-            pane: 'hallo'
-        },
+        selectedTab: 0,
+        tabs: [
         {
           title: 'Actieve alarmen',
           pane: activeAlarmPage
@@ -83,28 +80,31 @@
         {
           title: "Uploaden",
           pane: fileUploadPage
-        },
-        {
-          title: "Logische groepen",
-          pane: logicalGroupPage
-        },
-        {
-          title: "Toegangsgroepen",
-          pane: accessGroupPage
-        },
-        {
-          ID: 'location_tab',
-          title: "Locaties",
-          pane: locationPage
-        },
-        {
-          title: "Tijdseries",
-          pane: timeseriesPage
-        },
-        {
-          title: "Bronnen",
-          pane: sourcePage
         }
+          {% if request.user.is_staff %}
+         ,
+          {
+            title: "Logische groepen",
+            pane: logicalGroupPage
+          },
+          {
+            title: "Toegangsgroepen",
+            pane: accessGroupPage
+          },
+          {
+            title: "Tijdseries",
+            pane: timeseriesPage
+          },
+          {
+            ID: 'location_tab',
+            title: "Locaties",
+            pane: locationPage
+          },
+          {
+            title: "Bronnen",
+            pane: sourcePage
+          }
+          {% endif %}
         ]
       });
     </script>
