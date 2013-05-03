@@ -128,6 +128,7 @@ MIDDLEWARE_CLASSES = (
     'dikedata_api.middleware.AuthenticationMiddleware',
     'lizard_security.middleware.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'ddsc_api.middleware.DisableClientSideCaching',
 )
 
 AUTHENTICATION_BACKENDS = (
