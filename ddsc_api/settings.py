@@ -225,6 +225,8 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 AUTH_PROFILE_MODULE = 'ddsc_site.UserProfile'
 
+SESSION_COOKIE_AGE = 60*60*12 # 12 hours
+
 try:
     # For local production overrides (DB passwords, for instance)
     from ddsc_api.localsettings import *  # NOQA
