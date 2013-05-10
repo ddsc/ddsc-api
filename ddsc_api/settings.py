@@ -92,6 +92,8 @@ STATIC_ROOT = os.path.join(BUILDOUT_DIR, 'var', 'static')
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 MEDIA_URL = '/media/'
+ANNOTATION_ATTACHMENTS_DIRNAME = 'annotation_attachments'
+ANNOTATION_ATTACHMENTS_DIR = os.path.join(MEDIA_ROOT, ANNOTATION_ATTACHMENTS_DIRNAME)
 # URL for the per-application /media static files collected by
 # django-staticfiles.  Use it in templates like
 # "{{ MEDIA_URL }}mypackage/my.css".
@@ -115,7 +117,8 @@ CACHES = {
 
 MIDDLEWARE_CLASSES = (
     # Gzip needs to be at the top.
-    'django.middleware.gzip.GZipMiddleware',
+    # Disabled GZIP due to it interfering with direct downloads (/annotations/files/)
+    #'django.middleware.gzip.GZipMiddleware',
     # Below is the default list, don't modify it.
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -128,6 +131,7 @@ MIDDLEWARE_CLASSES = (
     'dikedata_api.middleware.AuthenticationMiddleware',
     'lizard_security.middleware.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'ddsc_api.middleware.DisableClientSideCaching',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -220,6 +224,8 @@ TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 AUTH_PROFILE_MODULE = 'ddsc_site.UserProfile'
+
+SESSION_COOKIE_AGE = 60*60*12 # 12 hours
 
 try:
     # For local production overrides (DB passwords, for instance)
