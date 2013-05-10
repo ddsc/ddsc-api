@@ -12,6 +12,7 @@ install_requires = [
     'Django',
     'dikedata-api',
     'ddsc-site',
+    'ddsc-opendap',
     'ddsc-logging',
     'django-extensions',
     'django-nose',
@@ -24,6 +25,7 @@ install_requires = [
     'raven',
     'werkzeug',
     'tslib',
+    'lizard-auth-client',
     ],
 
 setup(name='ddsc-api',
