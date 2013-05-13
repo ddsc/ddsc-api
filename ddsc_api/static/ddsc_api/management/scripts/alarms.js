@@ -104,8 +104,8 @@ var alarmForm = isc.DynamicForm.create({
   colWidths: [100, 300],
   fields: [
     {type: 'header', defaultValue: "Alarm instellingen"},
-    {name: "id", title:"id", canEdit: false},
-    {name: "active_status", title: "actief", type: "boolean", defaultValue: true},
+    {name: "id", title:"id", editorType: 'HiddenItem', canEdit: false},
+    {name: "active_status", title: "aan/ uit", type: "boolean", defaultValue: true},
     {name: "name", width: "*"},
     {name: "frequency", width: "*"},
     {name: "urgency", width: "*"},
@@ -123,7 +123,7 @@ var alarmItemForm = isc.DynamicForm.create({
   colWidths: [75, 300],
   fields: [
 
-    {name: "id", title: "id", canEdit: false},
+    {name: "id", title: "id", editorType: 'HiddenItem', canEdit: false},
     {name: "name", title:"Naam", type: "text"},
     {type: 'header', defaultValue: "Object"},
     {name: "alarm_type", title: "Object type",  valueMap: ['timeseries', 'location', 'logical group'],

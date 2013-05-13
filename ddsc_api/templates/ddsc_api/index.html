@@ -76,14 +76,16 @@
         {
           title: "Alarmen beheer",
           pane: alarmPage
-        },
-        {
+        }
+        {% if is_data_provider %}
+        ,{
           title: "Uploaden",
           pane: fileUploadPage
         }
-          {% if request.user.is_staff %}
-         ,
-          {
+        {% endif %}
+        {% if is_data_owner %}
+
+          ,{
             title: "Logische groepen",
             pane: logicalGroupPage
           },

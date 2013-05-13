@@ -6,14 +6,12 @@ var locationDS = isc.FilterPaginatedDataSource.create({
   dataURL: settings.locations_url,
   fields:[
     {name:"url", title:"Url", hidden: true},
-    {name:"uuid", title:"Uuid", hidden: true},
+    {name:"uuid", title:"Uuid"},
     {name:"name", title:"naam"},
-    {name:"description", title:"beschrijving"},
+    {name:"description", title:"beschrijving", hidden: true},
     {name:"point_geometry", title:"punt geometrie"},
     {name:"srid", title:"SRID", hidden: true},
-    {name:"geometry_precision", title:"geometrie precisie", hidden: true},
-    {name: "path", title: "path", type: "text", width: 80},
-    {name: "depth", title: "diepte", type: "integer", width:50, hidden: true}
+    {name:"geometry_precision", title:"geometrie precisie", hidden: true}
   ]
 });
 
@@ -45,9 +43,7 @@ var locationForm = isc.DynamicForm.create({
     {name:"description", type: 'TextArea', width: '*'},
     {name:"point_geometry", width: '*'},
     {name:"srid"},
-    {name:"geometry_precision", type: 'spinner'},
-    {name: "path", width: '*', canEdit: false},
-    {name: "depth", width: '*', canEdit: false}
+    {name:"geometry_precision", type: 'spinner'}
   ]
 });
 

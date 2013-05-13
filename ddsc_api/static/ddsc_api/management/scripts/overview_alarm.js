@@ -41,8 +41,6 @@ var activeAlarmForm = isc.DynamicForm.create({
   colWidths: [100, 250],
   fields: [
     {type: 'header', defaultValue: "Details actief alarm"},
-    {name: "id", width: "*", canEdit: false},
-    {name: "url", width: "*", canEdit: false},
     {name: "active", width: "*"},
     {name: "alarm.name", width: "*", readonly: true},
     {name: "first_triggered_on", width: "*", readonly: true},

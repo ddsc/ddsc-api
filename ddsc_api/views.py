@@ -8,6 +8,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.generic import TemplateView
 
+from lizard_security.models import DataOwner, PermissionMapper
+
 from rest_framework import exceptions as ex
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -20,6 +22,21 @@ from dikedata_api.views import write_events
 
 class ManagementView(TemplateView):
     template_name = 'ddsc_api/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManagementView, self).get_context_data(**kwargs)
+
+        if not self.request.user.is_authenticated():
+            return context
+
+        if self.request.user.is_superuser or DataOwner.objects.filter(data_managers=self.request.user).count() > 0:
+            context['is_data_owner'] = True
+        if self.request.user.is_superuser or \
+                PermissionMapper.objects.filter(permission_group__permissions__codename='change_timeseries',
+                                                     user_group__members=self.request.user):
+            context['is_data_provider'] = True
+
+        return context
 
     def dispatch(self, *args, **kwargs):
         return super(ManagementView, self).dispatch(*args, **kwargs)
@@ -100,22 +117,20 @@ class CSVUploadView(TemplateView):
 class Root(APIView):
     def get(self, request, format=None):
         response = OrderedDict([
-            ('alarms', reverse('alarm_active-list', request=request)),
-            ('datasets', reverse('dataset-list', request=request)),
             ('locations', reverse('location-list', request=request)),
             ('timeseries', reverse('timeseries-list', request=request)),
             ('logicalgroups', reverse('logicalgroup-list', request=request)),
-            ('layers', reverse('layer-list', request=request)),
-            ('collages', reverse('collage-list', request=request)),
-            ('collageitems', reverse('collageitem-list', request=request)),
-            ('workspaces', reverse('workspace-list', request=request)),
-            ('workspaceitems', reverse('workspaceitem-list', request=request)),
             ('sources', reverse('source-list', request=request)),
         ])
 
         user = getattr(request, 'user', None)
         if user is not None and user.is_superuser:
             response.update({
+                'layers': reverse('layer-list', request=request),
+                'collages': reverse('collage-list', request=request),
+                'collageitems': reverse('collageitem-list', request=request),
+                'workspaces': reverse('workspace-list', request=request),
+                'workspaceitems': reverse('workspaceitem-list', request=request),
                 'users': reverse('user-list', request=request),
                 'groups': reverse('usergroup-list', request=request),
                 'roles': reverse('role-list', request=request),

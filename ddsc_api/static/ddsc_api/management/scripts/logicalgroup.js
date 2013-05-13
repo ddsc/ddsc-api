@@ -1,6 +1,12 @@
 var logicalGroupDS = isc.DataSource.create({
   dataFormat: 'custom',
   dataURL: settings.logicalgroups_url,
+  requestProperties: {
+    params: {
+      management: true,
+      page_size: 1000
+    }
+  },
   defaultsNewNodesToRoot: true,
   fields:[
     {name: 'id', title: 'Id', type: 'text', canEdit: false},
@@ -105,8 +111,11 @@ var logicalGroupForm = isc.DynamicForm.create({
       optionDataSource: isc.DataSource.create({
         dataFormat: 'json',
         recordXPath: "results",
-        params: {
-          page_size: 1000
+        requestProperties: {
+          params: {
+            page_size: 1000,
+            management: true
+          }
         },
         dataURL: settings.dataowners_url,
         fields:[
@@ -120,9 +129,16 @@ var logicalGroupForm = isc.DynamicForm.create({
       name: "parents",
       title: "Parents",
       editorType: "MultiComboBoxItem",
+      defaultValue: [],
       optionDataSource: isc.DataSource.create({
         dataFormat: 'json',
         recordXPath: "results",
+        requestProperties: {
+          params: {
+            page_size: 1000,
+            management: true
+          }
+        },
         dataURL: settings.logicalgroups_url,
         fields:[
           {name: 'id', title: 'iD', primaryKey: true},
@@ -156,6 +172,11 @@ var timeseriesSelectionGrid = isc.ListGrid.create({
 var lgTimeseriesDS = isc.FilterPaginatedDataSource.create({
   autoFetchData: false,
   dataURL: settings.timeseries_url,
+  requestProperties: {
+    params: {
+      management: true
+    }
+  },
   fields:[
     {name: 'id', title: 'id', hidden: true},
     {name: 'uuid', title: 'UUID'},
@@ -188,8 +209,8 @@ var lgTimeseries = isc.DefaultListGrid.create({
 var saveLogicalGroup = function(saveAsNew) {
   var data = logicalGroupForm.getData();
   var timeseries = timeseriesSelectionGrid.getData();
-  //var parents = parentSelectionGrid.getData();
 
+  data.parents = logicalGroupForm.getField('parents').getValue();
   var parents = [];
   for (var i=0; i<data.parents.length; i++) {
     parents.push({parent: data.parents[i]});
@@ -202,10 +223,10 @@ var saveLogicalGroup = function(saveAsNew) {
   }
   data.timeseries = timeseries_ids;
 
-  saveObject(accessGroupForm, data, settings.logicalgroups_url, {
+  saveObject(logicalGroupForm, data, settings.logicalgroups_url, {
     saveAsNew: saveAsNew,
     reloadList: logicalGroupTree,
-    setFormData: setLogicalGroupFormData(data)
+    setFormData: setLogicalGroupFormData
   });
 }
 

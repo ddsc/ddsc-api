@@ -13,6 +13,11 @@ isc.AquoDataSource.addProperties({
 
 var timeseriesDS = isc.FilterPaginatedDataSource.create({
   dataURL: settings.timeseries_url,
+  requestProperties: {
+    params: {
+      management: true
+    }
+  },
   fields:[
     {name: 'id', title: 'id', hidden: true},
     {name: 'uuid', title: 'UUID'},
@@ -66,7 +71,6 @@ var setTimeseriesFormData = function(data) {
 
   data.source = take_attribute_or_null(data.source, 'uuid');
   data.location = take_attribute_or_null(data.location, 'uuid');
-
 
   data.parameter = take_attribute_or_null(data.parameter, 'code');
   data.unit = take_attribute_or_null(data.unit, 'code');
@@ -151,8 +155,11 @@ var timeseriesForm = isc.DynamicForm.create({
       optionDataSource: isc.DataSource.create({
         dataFormat: 'json',
         recordXPath: 'results',
-        params: {
-          page_size: 1000
+        requestProperties: {
+          params: {
+            page_size: 1000,
+            management: true
+          }
         },
         dataURL: settings.dataowners_url,
         fields:[
@@ -255,6 +262,8 @@ var timeseriesForm = isc.DynamicForm.create({
 
 var saveTimeseries = function(saveAsNew) {
   var data = timeseriesForm.getData();
+
+  data = replace_null(data);
 
   saveObject(timeseriesForm, data, settings.timeseries_url, {
     saveAsNew: saveAsNew,

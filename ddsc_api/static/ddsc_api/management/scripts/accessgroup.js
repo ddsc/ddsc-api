@@ -1,7 +1,13 @@
 var accessGroupDS = isc.DataSource.create({
   dataFormat: 'custom',
   dataURL: settings.datasets_url,
-  defaultsNewNodesToRoot: true,
+  requestProperties: {
+    params: {
+      management: true,
+      page_size: 0
+    }
+  },
+  //defaultsNewNodesToRoot: true,
   fields:[
     {name: 'id', title: 'Id', type: 'text', canEdit: false, hidden: true},
     {name: 'url', title: 'Url', type: 'text', canEdit: false, primaryKey: true, hidden: true},
@@ -11,9 +17,6 @@ var accessGroupDS = isc.DataSource.create({
   transformRequest: function(dsRequest) {
     dsRequest.httpHeaders = {
       "Accept" : "application/json"
-    }
-    dsRequest.params = {
-      page_size: 0
     }
   },
   transformResponse: function(dsResponse) {
@@ -71,8 +74,11 @@ var accessGroupForm = isc.DynamicForm.create({
       optionDataSource: isc.DataSource.create({
         dataFormat: 'json',
         recordXPath: "results",
-        params: {
-          page_size: 1000
+        requestProperties: {
+          params: {
+            page_size: 1000,
+            management: true
+          }
         },
         dataURL: settings.dataowners_url,
         fields:[
@@ -108,6 +114,7 @@ var agTimeseriesSelectionGrid = isc.ListGrid.create({
     {name:"id", title:"id", showIf: "return false"},
     {name:"url", title:"Url", showIf: "return false"},
     {name:"name", title:"Gselecteerde tijdseries - Naam"}
+
   ]
 });
 
@@ -116,6 +123,12 @@ var agTimeseriesSelectionGrid = isc.ListGrid.create({
 var agTimeseriesDS = isc.FilterPaginatedDataSource.create({
   autoFetchData: false,
   dataURL: settings.timeseries_url,
+  requestProperties: {
+    params: {
+      management: true
+    }
+  },
+
   fields:[
     {name: 'id', title: 'id', hidden: true},
     {name: 'uuid', title: 'UUID'},
@@ -181,6 +194,7 @@ accessGroupPage = isc.HLayout.create({
               click: function() {
                 accessGroupForm.setData([]);
                 accessGroupForm.setErrors([]);
+                agAccessGroupOverview.setData([]);
                 agTimeseriesSelectionGrid.setData([]);
               }
             }),
@@ -189,6 +203,7 @@ accessGroupPage = isc.HLayout.create({
               click: function() {
                 accessGroupForm.setData([]);
                 accessGroupForm.setErrors([]);
+                agAccessGroupOverview.setData([]);
                 agTimeseriesSelectionGrid.setData([]);
               }
             }),

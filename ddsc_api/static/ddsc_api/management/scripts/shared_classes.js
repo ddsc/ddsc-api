@@ -38,19 +38,18 @@ isc.ClassFactory.defineClass("FilterPaginatedDataSource", isc.RestDataSource);
 isc.FilterPaginatedDataSource.addProperties({
   dataFormat: 'custom',
   useClientSorting:false,
+  requestProperties: {
+    params: {}
+  },
   resultSetClass: isc.UncachedResultSet,
   transformRequest: function(dsRequest) {
     dsRequest.httpHeaders = {
       "Accept" : "application/json"
     }
-    dsRequest.params = {};
 
     if (typeof(dsRequest.startRow)=='number' && typeof(dsRequest.dataPageSize)=='number') {
-
-      dsRequest.params = {
-        page: Math.floor(dsRequest.startRow / dsRequest.dataPageSize) + 1, //first result is page 1
-        page_size: dsRequest.dataPageSize
-      }
+      dsRequest.params.page = Math.floor(dsRequest.startRow / dsRequest.dataPageSize) + 1; //first result is page 1
+      dsRequest.params.page_size = dsRequest.dataPageSize;
     }
 
     if (dsRequest.data) {
@@ -61,6 +60,7 @@ isc.FilterPaginatedDataSource.addProperties({
         } else if (typeof(dsRequest.startRow)!='number') {
           //request for specific value - used for 'start' value in forms
           filter[key] = dsRequest.data[key];
+          dsRequest.params.page = 1;
         } else {
           filter[key + '__icontains'] = dsRequest.data[key];
         }
@@ -214,11 +214,16 @@ function saveObject(form, data, post_url, options) {
       } else if (rpcResponse.httpResponseCode == 400) {
         //show validation errors
         var data = isc.JSON.decode(rpcResponse.httpResponseText);
+        debugger
         form.setErrors(data, true);
+
+        if (data && data['__all__']) {
+          data['detail'] = data['__all__'];
+        }
 
         var message = 'Validatie fout. Voer de gegevens juist in en sla het nog een keer op. ';
         if (data && data['detail']) {
-          message = message + data['detail'] + extra_message;
+          message = message + data['detail'];
         }
         if (options.extraValidationMessage) {
           message += options.extraValidationMessage(data);
