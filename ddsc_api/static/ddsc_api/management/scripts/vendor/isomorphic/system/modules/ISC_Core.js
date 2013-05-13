@@ -895,7 +895,7 @@ if(isc.rpc.logIsDebugEnabled()){isc.rpc.logDebug("XMLHttpRequest POST to "+_2+" 
 _11.open(_4,_2,!_9);var _16=this.$h5(_11,_6);if(!_16){_5==_11.setRequestHeader("Content-Type",_5)}
 if(_8){_8.xhrHeaders=_6;_8.xhrData=_7}
 if(_7!=null&&!isc.isA.String(_7)){this.logWarn("Non-string data object passed to sendXML as request.data:"+this.echo(_7)+" attempting to convert to a string.");_7=_7.toString?_7.toString():""+_7}
-_11.send(_7)}else{var _17=isc.rpc.addParamsToURL(_2,_3);_11.open(_4,_17,!_9);if(_1.bypassCache){}; _11.withCredentials = true;
+_11.send(_7)}else{var _17=isc.rpc.addParamsToURL(_2,_3);_11.open(_4,_17,!_9);if(_1.bypassCache){};
 this.$h5(_11,_6);if(isc.rpc.logIsDebugEnabled()){isc.rpc.logDebug("XMLHttpRequest GET from "+_2+" with fields: "+isc.Log.echoAll(_3)+" full URL string: "+_17)}
 _11.send(null)}
 return _11},isc.A.performXmlTransactionReply=function isc_c_Comm_performXmlTransactionReply(_1,_2){var _3=this.$50c[_1]
