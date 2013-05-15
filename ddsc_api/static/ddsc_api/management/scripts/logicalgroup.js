@@ -4,7 +4,8 @@ var logicalGroupDS = isc.DataSource.create({
   requestProperties: {
     params: {
       management: true,
-      page_size: 1000
+      page_size: 1000,
+      format: 'json'
     }
   },
   defaultsNewNodesToRoot: true,
@@ -83,6 +84,9 @@ var logicalGroupTree = isc.TreeGrid.create({
   ],
   rowClick: function(record) {
     RPCManager.sendRequest({
+      httpHeaders: {
+        'Accept': 'application/json'
+      },
       actionURL: record._url,
       httpMethod: 'GET',
       callback: function(rpcResponse, data, rpcRequest) {
