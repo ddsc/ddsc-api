@@ -38,13 +38,17 @@ isc.ClassFactory.defineClass("FilterPaginatedDataSource", isc.RestDataSource);
 isc.FilterPaginatedDataSource.addProperties({
   dataFormat: 'custom',
   useClientSorting:false,
-  requestProperties: {
+  /*requestProperties: {
     params: {}
-  },
+  },*/
   resultSetClass: isc.UncachedResultSet,
   transformRequest: function(dsRequest) {
     dsRequest.httpHeaders = {
       "Accept" : "application/json"
+    }
+
+    if (typeof(dsRequest.params)!='object') {
+      dsRequest.params = {};
     }
 
     if (typeof(dsRequest.startRow)=='number' && typeof(dsRequest.dataPageSize)=='number') {
