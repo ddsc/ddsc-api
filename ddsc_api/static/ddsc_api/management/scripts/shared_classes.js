@@ -218,7 +218,7 @@ function saveObject(form, data, post_url, options) {
       } else if (rpcResponse.httpResponseCode == 400) {
         //show validation errors
         var data = isc.JSON.decode(rpcResponse.httpResponseText);
-        debugger
+        //debugger
         form.setErrors(data, true);
 
         if (data && data['__all__']) {
