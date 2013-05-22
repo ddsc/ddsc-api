@@ -57,6 +57,9 @@ var alarmList = isc.ListGrid.create({
     RPCManager.sendRequest({
       actionURL: record.url,
       httpMethod: 'GET',
+      httpHeaders: {
+        "Accept" : "application/json"
+      },
       callback: function(rpcResponse, data, rpcRequest) {
         data = isc.JSON.decode(data);
         setAlarmFormData(data);
@@ -227,7 +230,8 @@ var alarmItemList = isc.ListGrid.create({
   canRemoveRecords: true,
   fields:[
     {name: "alarm_type", title: "alarm type", type: "text", width:80, valueMap: ['timeseries', 'location', 'logical group']},
-    {name: "object_id", title: "object_id", type: "text", width:50},
+    {name: "object_id", title: "object id", type: "text", width:50},
+    {name: "content_object_name", title: "object naam", type: "text", width:50},
     {name: "id", title:"id", showIf: function() { return false; }},
     {name: "name", title:"Naam", showIf: function() { return false; }},
     {name: 'logical_check', title: 'wat', width: 50},
@@ -359,7 +363,8 @@ alarmPage = isc.HLayout.create({
                     actionURL: alarmForm.getData()['url'],
                     httpMethod: 'DELETE',
                     httpHeaders: {
-                      'X-CSRFToken': document.cookie.split('=')[1]
+                      'X-CSRFToken': document.cookie.split('=')[1],
+                      "Accept" : "application/json"
                     },
                     callback: function(rpcResponse, data, rpcRequest) {
                       console.log('verwijderen gelukt');

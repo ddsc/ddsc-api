@@ -25,6 +25,9 @@ var activeAlarmList = isc.DefaultListGrid.create({
     RPCManager.sendRequest({
       actionURL: record.url,
       httpMethod: 'GET',
+      httpHeaders: {
+        "Accept" : "application/json"
+      },
       callback: function(rpcResponse, data, rpcRequest) {
         data = isc.JSON.decode(data);
         activeAlarmForm.setData(data);

@@ -43,9 +43,11 @@ isc.FilterPaginatedDataSource.addProperties({
   },*/
   resultSetClass: isc.UncachedResultSet,
   transformRequest: function(dsRequest) {
-    dsRequest.httpHeaders = {
-      "Accept" : "application/json"
+    if (typeof(dsRequest.httpHeaders)!='object') {
+      dsRequest.httpHeaders = {};
     }
+
+    dsRequest.httpHeaders["Accept"] = "application/json";
 
     if (typeof(dsRequest.params)!='object') {
       dsRequest.params = {};
@@ -194,7 +196,8 @@ function saveObject(form, data, post_url, options) {
     params: data,
     httpHeaders: {
       'X-CSRFToken': document.cookie.split('=')[1],
-      'Accept-Language': 'nl'
+      'Accept-Language': 'nl',
+      "Accept" : "application/json"
     },
     callback: function(rpcResponse, data, rpcRequest) {
       if (rpcResponse.httpResponseCode == 200 || rpcResponse.httpResponseCode == 201) {
@@ -209,6 +212,9 @@ function saveObject(form, data, post_url, options) {
           RPCManager.sendRequest({
             actionURL: data.url,
             httpMethod: 'GET',
+            httpHeaders: {
+              "Accept" : "application/json"
+            },
             callback: function(rpcResponse, data, rpcRequest) {
               var data = isc.JSON.decode(data);
               options.setFormData(data);
@@ -218,7 +224,6 @@ function saveObject(form, data, post_url, options) {
       } else if (rpcResponse.httpResponseCode == 400) {
         //show validation errors
         var data = isc.JSON.decode(rpcResponse.httpResponseText);
-        debugger
         form.setErrors(data, true);
 
         if (data && data['__all__']) {

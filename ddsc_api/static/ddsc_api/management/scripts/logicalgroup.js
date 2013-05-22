@@ -5,6 +5,9 @@ var logicalGroupDS = isc.DataSource.create({
     params: {
       management: true,
       page_size: 1000
+    },
+    httpHeaders: {
+      "Accept" : "application/json"
     }
   },
   defaultsNewNodesToRoot: true,
@@ -85,6 +88,9 @@ var logicalGroupTree = isc.TreeGrid.create({
     RPCManager.sendRequest({
       actionURL: record._url,
       httpMethod: 'GET',
+      httpHeaders: {
+        "Accept" : "application/json"
+      },
       callback: function(rpcResponse, data, rpcRequest) {
         var data = isc.JSON.decode(rpcResponse.data);
         setLogicalGroupFormData(data);
@@ -115,6 +121,9 @@ var logicalGroupForm = isc.DynamicForm.create({
           params: {
             page_size: 1000,
             management: true
+          },
+          httpHeaders: {
+            "Accept" : "application/json"
           }
         },
         dataURL: settings.dataowners_url,
@@ -137,6 +146,9 @@ var logicalGroupForm = isc.DynamicForm.create({
           params: {
             page_size: 1000,
             management: true
+          },
+          httpHeaders: {
+            "Accept" : "application/json"
           }
         },
         dataURL: settings.logicalgroups_url,
@@ -175,6 +187,9 @@ var lgTimeseriesDS = isc.FilterPaginatedDataSource.create({
   requestProperties: {
     params: {
       management: true
+    },
+    httpHeaders: {
+      "Accept" : "application/json"
     }
   },
   fields:[
@@ -277,7 +292,8 @@ logicalGroupPage = isc.HLayout.create({
                     actionURL: logicalGroupForm.getData()['url'],
                     httpMethod: 'DELETE',
                     httpHeaders: {
-                      'X-CSRFToken': document.cookie.split('=')[1]
+                      'X-CSRFToken': document.cookie.split('=')[1],
+                      "Accept" : "application/json"
                     },
                     callback: function(rpcResponse, data, rpcRequest) {
                       console.log('verwijderen gelukt');

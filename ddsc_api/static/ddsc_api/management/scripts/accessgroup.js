@@ -5,6 +5,9 @@ var accessGroupDS = isc.DataSource.create({
     params: {
       management: true,
       page_size: 0
+    },
+    httpHeaders: {
+      "Accept" : "application/json"
     }
   },
   //defaultsNewNodesToRoot: true,
@@ -14,11 +17,6 @@ var accessGroupDS = isc.DataSource.create({
     {name: 'name', title: 'Naam'},
     {name: 'owner', title: 'Eigenaar'}
   ],
-  transformRequest: function(dsRequest) {
-    dsRequest.httpHeaders = {
-      "Accept" : "application/json"
-    }
-  },
   transformResponse: function(dsResponse) {
     var json_data = isc.JSON.decode(dsResponse.data);
     dsResponse.totalRows = json_data.length;
@@ -45,6 +43,9 @@ var accessGroupGrid = isc.ListGrid.create({
     RPCManager.sendRequest({
       actionURL: record.url,
       httpMethod: 'GET',
+      httpHeaders: {
+        "Accept" : "application/json"
+      },
       callback: function(rpcResponse, data, rpcRequest) {
         var data = isc.JSON.decode(rpcResponse.data);
         setAgFormData(data);
@@ -78,6 +79,9 @@ var accessGroupForm = isc.DynamicForm.create({
           params: {
             page_size: 1000,
             management: true
+          },
+          httpHeaders: {
+            "Accept" : "application/json"
           }
         },
         dataURL: settings.dataowners_url,
@@ -126,9 +130,11 @@ var agTimeseriesDS = isc.FilterPaginatedDataSource.create({
   requestProperties: {
     params: {
       management: true
+    },
+    httpHeaders: {
+      "Accept" : "application/json"
     }
   },
-
   fields:[
     {name: 'id', title: 'id', hidden: true},
     {name: 'uuid', title: 'UUID'},
@@ -222,7 +228,8 @@ accessGroupPage = isc.HLayout.create({
                     actionURL: accessGroupForm.getData()['url'],
                     httpMethod: 'DELETE',
                     httpHeaders: {
-                      'X-CSRFToken': document.cookie.split('=')[1]
+                      'X-CSRFToken': document.cookie.split('=')[1],
+                      "Accept" : "application/json"
                     },
                     callback: function(rpcResponse, data, rpcRequest) {
                       console.log('verwijderen gelukt');

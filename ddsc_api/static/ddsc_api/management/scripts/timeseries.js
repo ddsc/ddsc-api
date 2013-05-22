@@ -2,6 +2,11 @@ isc.ClassFactory.defineClass('AquoDataSource', isc.FilterPaginatedDataSource);
 
 isc.AquoDataSource.addProperties({
   autoFetchData: false,
+  requestProperties: {
+    httpHeaders: {
+      "Accept" : "application/json"
+    }
+  },
   fields:[
     {name: 'id', title: 'iD', primaryKey: true, hidden: true},
     {name: 'code', title: 'Code'},
@@ -16,6 +21,9 @@ var timeseriesDS = isc.FilterPaginatedDataSource.create({
   requestProperties: {
     params: {
       management: true
+    },
+    httpHeaders: {
+      "Accept" : "application/json"
     }
   },
   fields:[
@@ -94,6 +102,9 @@ var timeseriesList = isc.DefaultListGrid.create({
     RPCManager.sendRequest({
       actionURL: record.url,
       httpMethod: 'GET',
+      httpHeaders: {
+        "Accept" : "application/json"
+      },
       callback: function(rpcResponse, data, rpcRequest) {
         data = isc.JSON.decode(data);
         setTimeseriesFormData(data);
@@ -159,6 +170,9 @@ var timeseriesForm = isc.DynamicForm.create({
           params: {
             page_size: 1000,
             management: true
+          },
+          httpHeaders: {
+            "Accept" : "application/json"
           }
         },
         dataURL: settings.dataowners_url,
@@ -313,7 +327,8 @@ timeseriesPage = isc.HLayout.create({
                     actionURL: timeseriesForm.getData()['url'],
                     httpMethod: 'DELETE',
                     httpHeaders: {
-                      'X-CSRFToken': document.cookie.split('=')[1]
+                      'X-CSRFToken': document.cookie.split('=')[1],
+                      "Accept" : "application/json"
                     },
                     callback: function(rpcResponse, data, rpcRequest) {
                       console.log('verwijderen gelukt');

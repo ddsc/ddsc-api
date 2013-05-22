@@ -1,16 +1,25 @@
 
 var sourceDS = isc.FilterPaginatedDataSource.create({
   dataURL: settings.sources_url,
+  requestProperties: {
+    params: {
+      management: true
+    },
+    httpHeaders: {
+      "Accept" : "application/json"
+    }
+  },
   fields:[
     {name: 'id', title: 'id', hidden: true},
-    {name: 'uuid', title: 'UUID', width: 100},
-    {name: 'name', title: 'Naam'},
-    {name: 'source_type', title: 'Bron type', valueMap: ['Calculated', 'Sensor', 'Simulated', 'Derived'],
+    {name: 'uuid', title: 'uuid', width: 100},
+    {name: 'name', title: 'naam'},
+    {name: 'source_type', title: 'bron type', valueMap: ['Calculated', 'Sensor', 'Simulated', 'Derived'],
       canFilter: false, width: 100},
-    {name: 'manufacturer', title: 'Leverancier', width: 100},
-    {name: 'details', title: 'Beschrijving', hidden: true},
-    {name: 'frequency', title: 'Inwin frequentie (s)', width: 80},
-    {name: 'timeout', title: 'Attentie tijd (s)', width: 80}
+    {name: 'owner', title: 'eigenaar'},
+    {name: 'manufacturer', title: 'leverancier', width: 100},
+    {name: 'details', title: 'beschrijving', hidden: true},
+    {name: 'frequency', title: 'inwin frequentie (s)', width: 80},
+    {name: 'timeout', title: 'attentie tijd (s)', width: 80}
   ]
 });
 
@@ -33,6 +42,11 @@ var sourceList = isc.DefaultListGrid.create({
 var manufacturerDS = isc.FilterPaginatedDataSource.create({
   dataURL: settings.manufacturer_url,
   autoFetchData: false,
+  requestProperties: {
+    httpHeaders: {
+      "Accept" : "application/json"
+    }
+  },
   fields:[
     {name: 'code', title: 'Code', primaryKey: true, hidden: true},
     {name: 'name', title: 'Naam'}
@@ -50,6 +64,29 @@ var sourceForm = isc.DynamicForm.create({
     {name: 'id', title: 'id', canEdit: false, width: '*'},
     {name: 'uuid', title: 'uuid', canEdit: false, width: '*'},
     {name: 'name', width: '*'},
+    {
+      name: 'owner', title: 'Data eigenaar', type: 'combo',
+      width: '*',
+      valueField: 'name', displayField: 'name',
+      optionDataSource: isc.DataSource.create({
+        dataFormat: 'json',
+        recordXPath: 'results',
+        requestProperties: {
+          params: {
+            page_size: 1000,
+            management: true
+          },
+          httpHeaders: {
+            "Accept" : "application/json"
+          }
+        },
+        dataURL: settings.dataowners_url,
+        fields:[
+          {name: 'id', title: 'ID', primaryKey: true},
+          {name: 'name', title: 'Name'}
+        ]
+      })
+    },
     {name: 'source_type', width: '*'},
     {name: 'manufacturer', type: 'combo', valueField: 'name', displayField: 'name',
       optionDataSource: manufacturerDS, width: '*'},
@@ -111,7 +148,8 @@ sourcePage = isc.HLayout.create({
                     actionURL: sourceForm.getData()['url'],
                     httpMethod: 'DELETE',
                     httpHeaders: {
-                      'X-CSRFToken': document.cookie.split('=')[1]
+                      'X-CSRFToken': document.cookie.split('=')[1],
+                      "Accept" : "application/json"
                     },
                     callback: function(rpcResponse, data, rpcRequest) {
                       console.log('verwijderen gelukt');
