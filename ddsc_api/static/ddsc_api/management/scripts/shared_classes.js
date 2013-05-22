@@ -205,7 +205,7 @@ function saveObject(form, data, post_url, options) {
        var data = isc.JSON.decode(data);
         options.setFormData(data);
         if (options.reloadList) {
-          options.reloadList.fetchData({test: timestamp()}); //force new fetch with timestamp
+          options.reloadList.fetchData(); //force new fetch with timestamp
         }
         if (rpcResponse.httpResponseCode == 201) {
           //in case of create, the list serializer is used for the return. do extra fetch to get details

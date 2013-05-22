@@ -5,7 +5,7 @@ var activeAlarmDS = isc.FilterPaginatedDataSource.create({
   fields:[
     {name: "id", title:"id", hidden: true},
     {name: "url", title:"url", hidden: true},
-    {name: "active", title:"Actief", type: 'boolean'},
+    {name: "active", title:"Actief", type: 'boolean', hidden: true},
     {name: "alarm.name", title:"Naam"},
     {name: "first_triggered_on", title:"geactiveerd"},
     {name: "deactivated_on", title:"gedeactiveerd"},
