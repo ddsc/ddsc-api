@@ -70,6 +70,16 @@ statusPage = isc.HLayout.create({
   membersMargin: 10,
   members: [
     statusList,
-    statusForm
+    isc.VLayout.create({
+      members: [
+        statusForm,
+        isc.IButton.create({
+          title: 'Help',
+          click: function() {
+            window.open(settings.doc.status_overview_url, "Help");
+          }
+        })
+      ]
+    })
   ]
 });

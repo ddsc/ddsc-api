@@ -8,10 +8,16 @@ uploadFrame = isc.VLayout.create({width:"100%", height:"100%", members:[
     })
 ]})
 
-fileUploadPage = isc.HLayout.create({
+fileUploadPage = isc.VLayout.create({
   autoDraw: false,
   members: [
-    uploadFrame
+    uploadFrame,
+    isc.IButton.create({
+      title: 'Help',
+      click: function() {
+        window.open(settings.doc.upload_url, "Help");
+      }
+    })
   ]
 });
 

@@ -28,34 +28,34 @@ var timeseriesDS = isc.FilterPaginatedDataSource.create({
   },
   fields:[
     {name: 'id', title: 'id', hidden: true},
-    {name: 'uuid', title: 'UUID'},
-    {name: 'name', title: 'Naam'},
-    {name: 'description', title: 'Beschrijving', hidden: true},
+    {name: 'uuid', title: 'uuid'},
+    {name: 'name', title: 'naam'},
+    {name: 'description', title: 'beschrijving', hidden: true},
     {
-      name: 'value_type', title: 'Waarde type', valueMap: ['integer', 'float', 'text', 'image',
+      name: 'value_type', title: 'waarde type', valueMap: ['integer', 'float', 'text', 'image',
       'georeferenced remote sensing', 'movie', 'file'], canFilter: false, hidden: true
     },
-    {name: 'source', title: 'Bron systeem', hidden: true},//fk
-    {name: 'owner', title: 'Data eigenaar'},//fk
-    {name: 'location.name', title: 'Locatie'},//fk
-    {name: 'parameter', title: 'Parameter'},//aquo
-    {name: 'unit', title: 'Eenheid', hidden: true},//aquo
-    {name: 'reference_frame', title: 'Hoedaningheid', hidden: true},
-    {name: 'compartment', title: 'Compartiment', hidden: true},
-    {name: 'measuring_device', title: 'Meetapperatuur', hidden: true},
-    {name: 'measuring_method', title: 'Meetmethode', hidden: true},
-    {name: 'processing_method', title: 'Verwerkingsmethode', hidden: true},
+    {name: 'source', title: 'bron systeem', hidden: true},//fk
+    {name: 'owner', title: 'data eigenaar'},//fk
+    {name: 'location.name', title: 'locatie'},//fk
+    {name: 'parameter', title: 'parameter'},//aquo
+    {name: 'unit', title: 'eenheid', hidden: true},//aquo
+    {name: 'reference_frame', title: 'hoedaningheid', hidden: true},
+    {name: 'compartment', title: 'compartiment', hidden: true},
+    {name: 'measuring_device', title: 'meetapperatuur', hidden: true},
+    {name: 'measuring_method', title: 'meetmethode', hidden: true},
+    {name: 'processing_method', title: 'verwerkingsmethode', hidden: true},
 
-    {name: 'validate_max_hard', title: 'Harde bovengrens', hidden: true, type: 'float'},
-    {name: 'validate_min_hard', title: 'Harde ondergrens', hidden: true},
-    {name: 'validate_max_soft', title: 'Zachte bovengrens', hidden: true},
-    {name: 'validate_min_soft', title: 'Zachte ondergrens', hidden: true},
-    {name: 'validate_diff_hard', title: 'Harde maximale verandering', hidden: true},
-    {name: 'validate_diff_soft', title: 'Zachte maximale verandering', hidden: true},
+    {name: 'validate_max_hard', title: 'harde bovengrens', hidden: true, type: 'float'},
+    {name: 'validate_min_hard', title: 'harde ondergrens', hidden: true},
+    {name: 'validate_max_soft', title: 'zachte bovengrens', hidden: true},
+    {name: 'validate_min_soft', title: 'zachte ondergrens', hidden: true},
+    {name: 'validate_diff_hard', title: 'harde maximale verandering', hidden: true},
+    {name: 'validate_diff_soft', title: 'zachte maximale verandering', hidden: true},
 
-    {name: 'first_value_timestamp', title: 'Verwerkingsmethode', hidden: true},
-    {name: 'latest_value', title: 'Laatste waarde', canFilter: false, canSort: false},
-    {name: 'latest_value_timestamp', title: 'Tijdstip laatste waarde'},
+    {name: 'first_value_timestamp', title: 'verwerkingsmethode', hidden: true},
+    {name: 'latest_value', title: 'laatste waarde', canFilter: false, canSort: false},
+    {name: 'latest_value_timestamp', title: 'tijdstip laatste waarde'},
     {name: 'supplying_systems', title: 'id_mapping', hidden: true}
   ]
 });
@@ -334,13 +334,25 @@ timeseriesPage = isc.HLayout.create({
                       console.log('verwijderen gelukt');
                       timeseriesForm.setData([]);
                       timeseriesForm.setErrors([]);
-                      timeseriesList.fetchData({test: timestamp()}); //force new fetch with timestamp
+                      timeseriesList.invalidateCache(); //force new fetch with timestamp
                     }
                   });
                 }
               }
             })
           ]
+        }),
+        isc.IButton.create({
+          title: 'Help',
+          click: function() {
+            window.open(settings.doc.timeseries_url, "Help");
+          }
+        }),
+        isc.IButton.create({
+          title: 'Download template',
+          click: function() {
+            window.open(settings.template_download_url, "Template");
+          }
         })
       ]
     })

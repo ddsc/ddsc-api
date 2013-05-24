@@ -300,13 +300,19 @@ logicalGroupPage = isc.HLayout.create({
                       logicalGroupForm.setData([]);
                       logicalGroupForm.setErrors([]);
                       timeseriesSelectionGrid.setData([]);
-                      logicalGroupTree.fetchData({test: timestamp()}); //force new fetch with timestamp
+                      logicalGroupTree.invalidateCache(); //force new fetch with timestamp
                     }
                   });
                 }
               }
             })
           ]
+         }),
+        isc.IButton.create({
+          title: 'Help',
+          click: function() {
+            window.open(settings.doc.logicalgroup_url, "Help");
+          }
         })
       ]
     }),

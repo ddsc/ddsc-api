@@ -371,13 +371,19 @@ alarmPage = isc.HLayout.create({
                       alarmForm.setData([]);
                       alarmForm.setErrors([]);
                       alarmItemList.setData([]);
-                      alarmList.fetchData({test: timestamp()}); //force new fetch with timestamp
+                      alarmList.invalidateCache(); //force new fetch with timestamp
                     }
                   });
                 }
               }
             })
           ]
+        }),
+        isc.IButton.create({
+          title: 'Help',
+          click: function() {
+            window.open(settings.doc.alarms_url, "Help");
+          }
         })
       ]
     })

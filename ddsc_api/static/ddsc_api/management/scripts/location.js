@@ -20,7 +20,7 @@ var locationDS = isc.FilterPaginatedDataSource.create({
     {name:"point_geometry", title:"punt geometrie", canFilter: false},
     {name:"owner", title:"eigenaar"},
     {name:"show_on_map", title:"toon op kaart", type: "boolean", canFilter: false},
-    {name:"srid", title:"SRID", hidden: true},
+    {name:"srid", title:"SRID", valueMap: {28992: 'Rijksdriehoek', 4326: 'WGS84', 4258: 'ETRS89'}, hidden: true},
     {name:"geometry_precision", title:"geometrie precisie", hidden: true}
   ]
 });
@@ -166,6 +166,12 @@ locationPage = isc.HLayout.create({
               }
             })
           ]
+        }),
+        isc.IButton.create({
+          title: 'Help',
+          click: function() {
+            window.open(settings.doc.location_url, "Help");
+          }
         })
       ]
     })

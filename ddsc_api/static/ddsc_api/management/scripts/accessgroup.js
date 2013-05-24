@@ -236,13 +236,19 @@ accessGroupPage = isc.HLayout.create({
                       accessGroupForm.setData([]);
                       accessGroupForm.setErrors([]);
                       agTimeseriesSelectionGrid.setData([]);
-                      accessGroupGrid.fetchData({test: timestamp()}); //force new fetch with timestamp
+                      accessGroupGrid.invalidateCache(); //force new fetch with timestamp
                     }
                   });
                 }
               }
             })
           ]
+        }),
+        isc.IButton.create({
+          title: 'Help',
+          click: function() {
+            window.open(settings.doc.accessgroup_url, "Help");
+          }
         })
       ]
     }),

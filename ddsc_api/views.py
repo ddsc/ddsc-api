@@ -36,6 +36,8 @@ class ManagementView(TemplateView):
                                                      user_group__members=self.request.user):
             context['is_data_provider'] = True
 
+        context['nr'] = 1
+
         return context
 
     def dispatch(self, *args, **kwargs):

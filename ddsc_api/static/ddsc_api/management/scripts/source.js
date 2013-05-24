@@ -155,13 +155,19 @@ sourcePage = isc.HLayout.create({
                       console.log('verwijderen gelukt');
                       sourceForm.setData([]);
                       sourceForm.setErrors([]);
-                      sourceList.fetchData({test: timestamp()}); //force new fetch with timestamp
+                      sourceList.invalidateCache(); //force new fetch with timestamp
                     }
                   });
                 }
               }
             })
           ]
+        }),
+        isc.IButton.create({
+          title: 'Help',
+          click: function() {
+            window.open(settings.doc.source_url, "Help");
+          }
         })
       ]
     })

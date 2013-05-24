@@ -36,18 +36,18 @@
   </head>
   <body>
 
-    <script src="{{ STATIC_URL }}ddsc_api/management/settings.js"></script>
-    <script src={{ STATIC_URL }}ddsc_api/management/scripts/shared_classes.js></script>
-    <script src={{ STATIC_URL }}ddsc_api/management/scripts/location.js></script>
-    <script src={{ STATIC_URL }}ddsc_api/management/scripts/logicalgroup.js></script>
-    <script src={{ STATIC_URL }}ddsc_api/management/scripts/alarms.js></script>
-    <script src={{ STATIC_URL }}ddsc_api/management/scripts/fileupload.js></script>
-    <script src={{ STATIC_URL }}ddsc_api/management/scripts/timeseries.js></script>
-    <script src={{ STATIC_URL }}ddsc_api/management/scripts/source.js></script>
-    <script src={{ STATIC_URL }}ddsc_api/management/scripts/accessgroup.js></script>
-    <script src={{ STATIC_URL }}ddsc_api/management/scripts/overview_alarm.js></script>
-    <script src={{ STATIC_URL }}ddsc_api/management/scripts/overview_status.js></script>
-    <script src={{ STATIC_URL }}ddsc_api/management/scripts/overview_annotation.js></script>
+    <script src="{{ STATIC_URL }}ddsc_api/management/settings.js?v={{ nr }}"></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/shared_classes.js?v={{ nr }}></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/location.js?v={{ nr }}></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/logicalgroup.js?v={{ nr }}></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/alarms.js?v={{ nr }}></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/fileupload.js?v={{ nr }}></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/timeseries.js?v={{ nr }}></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/source.js?v={{ nr }}></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/accessgroup.js?v={{ nr }}></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/overview_alarm.js?v={{ nr }}></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/overview_status.js?v={{ nr }}></script>
+    <script src={{ STATIC_URL }}ddsc_api/management/scripts/overview_annotation.js?v={{ nr }}></script>
 
     {% csrf_token %}
     <div style="text-align: left"><br><br>loading....</div>
