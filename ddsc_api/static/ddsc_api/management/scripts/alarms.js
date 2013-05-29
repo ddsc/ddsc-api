@@ -53,6 +53,8 @@ var alarmList = isc.ListGrid.create({
   alternateRecordStyles:true,
   autoFetchData: true,
   dataSource: alarmDS,
+  sortField: 'name',
+  sortDirection: Array.ASCENDING,
   rowClick: function(record) {
     RPCManager.sendRequest({
       actionURL: record.url,
@@ -189,9 +191,10 @@ var alarmItemForm = isc.DynamicForm.create({
           var data = form.getValues();
           if (data.alarm_type) {
             data.object_id = data[data.alarm_type];
+            data.content_object_name = form.getField(data.alarm_type).getDisplayValue();
           } else
             data.object_id = null;
-
+            data.object_name = null;
           if (form.originalRecord) {
             isc.addProperties(form.originalRecord, data);
             alarmItemList.markForRedraw();

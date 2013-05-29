@@ -97,6 +97,8 @@ var setTimeseriesFormData = function(data) {
 
 var timeseriesList = isc.DefaultListGrid.create({
   width:700,
+  sortField: 'name',
+  sortDirection: Array.ASCENDING,
   dataSource: timeseriesDS,
   rowClick: function(record) {
     RPCManager.sendRequest({

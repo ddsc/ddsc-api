@@ -13,7 +13,7 @@ function userWarning(title, message, addContactInfo) {
 
   if (addContactInfo) {
      message = message + '<br>Probeer het (later) nog eens. ' +
-        'Controleer of u nog bent ingelogd door de pagina te herladen' +
+        'Controleer of u nog bent ingelogd door de pagina te herladen. ' +
         'Blijft het probleem optreden, neem dan contact op met de helpdesk.'
   }
 
@@ -241,7 +241,11 @@ function saveObject(form, data, post_url, options) {
         userWarning('Validatie', message, false);
       } else {
         //show error message
-        var data = isc.JSON.decode(rpcResponse.httpResponseText);
+        try {
+          var data = isc.JSON.decode(rpcResponse.httpResponseText);
+        } catch (e) {
+          var data = {detail: ' '}
+        }
         var message = 'Fout bij opslaan. '
         if (data && data['detail']) {
           message = message + data['detail']

@@ -22,6 +22,8 @@ var activeAlarmDS = isc.FilterPaginatedDataSource.create({
 var activeAlarmList = isc.DefaultListGrid.create({
   width: 700,
   dataSource: activeAlarmDS,
+  sortField: 'alarm.name',
+  sortDirection: Array.ASCENDING,
   rowClick: function(record) {
     RPCManager.sendRequest({
       actionURL: record.url,

@@ -75,6 +75,8 @@ var logicalGroupTree = isc.TreeGrid.create({
   canAcceptDroppedRecords: true,
   autoFetchData:true,
   loadDataOnDemand:false,
+  sortField: 'name',
+  sortDirection: Array.ASCENDING,
   dataProperties:{
     dataArrived:function (parentNode) {
       this.openAll();
@@ -213,6 +215,8 @@ var lgTimeseries = isc.DefaultListGrid.create({
   dataSource: lgTimeseriesDS,
   canDragRecordsOut: true,
   dragDataAction: 'copy',
+  sortField: 'name',
+  sortDirection: Array.ASCENDING,
   dataProperties:{
     disableCacheSync: true
   },

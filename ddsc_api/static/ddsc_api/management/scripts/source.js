@@ -32,6 +32,8 @@ var setSourceFormData = function(data) {
 
 var sourceList = isc.DefaultListGrid.create({
   width:700,
+  sortField: 'name',
+  sortDirection: Array.ASCENDING,
   dataSource: sourceDS,
   rowClick: function(record) {
     setSourceFormData(record);

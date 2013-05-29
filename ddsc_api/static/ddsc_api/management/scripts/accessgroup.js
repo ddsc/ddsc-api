@@ -155,6 +155,8 @@ var agTimeseries = isc.DefaultListGrid.create({
   dataSource: agTimeseriesDS,
   canDragRecordsOut: true,
   dragDataAction: 'copy',
+  sortField: 'name',
+  sortDirection: Array.ASCENDING,
   dataProperties:{
     disableCacheSync: true
   },
@@ -175,7 +177,7 @@ var saveAccessGroup = function(saveAsNew) {
 
   saveObject(accessGroupForm, data, settings.datasets_url, {
     saveAsNew: saveAsNew,
-    reloadList: timeseriesList,
+    reloadList: accessGroupGrid,
     setFormData: setAgFormData
   });
 }

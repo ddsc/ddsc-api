@@ -28,6 +28,8 @@ var locationDS = isc.FilterPaginatedDataSource.create({
 var locationList = isc.DefaultListGrid.create({
   width:700,
   dataSource: locationDS,
+  sortField: 'name',
+  sortDirection: Array.ASCENDING,
   rowClick: function(record) {
     RPCManager.sendRequest({
       actionURL: record.url,
@@ -159,7 +161,7 @@ locationPage = isc.HLayout.create({
                       console.log('verwijderen gelukt');
                       locationForm.setData([]);
                       locationForm.setErrors([]);
-                      locationList.fetchData({test: timestamp()}); //force new fetch with timestamp
+                      locationList.invalidateCache(); //force new fetch with timestamp
                     }
                   });
                 }
