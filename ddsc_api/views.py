@@ -18,7 +18,8 @@ from rest_framework.views import APIView
 from ddsc_core.models import IdMapping, Timeseries
 from dikedata_api import serializers
 from dikedata_api.views import write_events
-
+from pkginfo.installed import Installed
+import ddsc_api
 
 class ManagementView(TemplateView):
     template_name = 'ddsc_api/index.html'
@@ -36,7 +37,7 @@ class ManagementView(TemplateView):
                                                      user_group__members=self.request.user):
             context['is_data_provider'] = True
 
-        context['nr'] = 1
+        context['nr'] = Installed(ddsc_api).version
 
         return context
 
