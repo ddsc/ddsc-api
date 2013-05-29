@@ -230,7 +230,7 @@ accessGroupPage = isc.HLayout.create({
                     actionURL: accessGroupForm.getData()['url'],
                     httpMethod: 'DELETE',
                     httpHeaders: {
-                      'X-CSRFToken': document.cookie.split('=')[1],
+                      'X-CSRFToken': getCookie('csrftoken'),
                       "Accept" : "application/json"
                     },
                     callback: function(rpcResponse, data, rpcRequest) {

@@ -366,7 +366,7 @@ alarmPage = isc.HLayout.create({
                     actionURL: alarmForm.getData()['url'],
                     httpMethod: 'DELETE',
                     httpHeaders: {
-                      'X-CSRFToken': document.cookie.split('=')[1],
+                      'X-CSRFToken': getCookie('csrftoken'),
                       "Accept" : "application/json"
                     },
                     callback: function(rpcResponse, data, rpcRequest) {

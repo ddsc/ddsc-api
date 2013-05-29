@@ -8,6 +8,18 @@ isc.UncachedResultSet.addProperties({
 });
 
 
+function getCookie(name) {
+  var cookie_dict = {};
+  var cookie = document.cookie.split(';');
+  debugger
+  for (var i = 0; i < cookie.length; i++) {
+    var c = cookie[i].split('=');
+    if (c[0] == name) {
+      return c[1];
+    }
+  }
+}
+
 
 function userWarning(title, message, addContactInfo) {
 
@@ -196,7 +208,7 @@ function saveObject(form, data, post_url, options) {
     data: data,
     params: data,
     httpHeaders: {
-      'X-CSRFToken': document.cookie.split('=')[1],
+      'X-CSRFToken': getCookie('csrftoken'),
       'Accept-Language': 'nl',
       "Accept" : "application/json"
     },

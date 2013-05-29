@@ -152,7 +152,7 @@ locationPage = isc.HLayout.create({
                     actionURL: locationForm.getData()['url'],
                     httpMethod: 'DELETE',
                     httpHeaders: {
-                      'X-CSRFToken': document.cookie.split('=')[1],
+                      'X-CSRFToken': getCookie('csrftoken'),
                       httpHeaders: {
                         "Accept" : "application/json"
                       }
