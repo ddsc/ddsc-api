@@ -11,7 +11,6 @@ isc.UncachedResultSet.addProperties({
 function getCookie(name) {
   var cookie_dict = {};
   var cookie = document.cookie.split(';');
-  debugger
   for (var i = 0; i < cookie.length; i++) {
     var c = cookie[i].split('=');
     if (c[0] == name) {
