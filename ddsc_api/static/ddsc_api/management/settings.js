@@ -2,8 +2,8 @@
 
 var base = (domain ? domain : 'http://' + window.location.host);
 var domain = base + '/api/v1/';
-var doc = base + '/static_media/ddsc_api/management/data/Beheerdershandleiding - Dijk Data Service Centrum concept v1.3 BR.pdf';
-var user_doc = base + '/static_media/ddsc_api/management/data/Gebruikershandleiding - Dijk Data Service Centrum v1.2.pdf';
+var doc = base + '/static_media/ddsc_api/management/data/Beheerdershandleiding - Dijk Data Service Centrum.pdf';
+var user_doc = base + '/static_media/ddsc_api/management/data/Gebruikershandleiding - Dijk Data Service Centrum.pdf';
 
 var settings = {
     parameters_url: domain + 'parameters/',
@@ -43,6 +43,5 @@ var settings = {
       alarm_overview_url: user_doc + '#page=25',
       status_overview_url: user_doc + '#page=25'
     },
-    template_download_url: 'http://github.com/ddsc/'
+    template_download_url: 'https://github.com/ddsc/ddsc-excel-import/blob/master/template/DDSC_import_location_timeseries.xls?raw=true'
 };
-
