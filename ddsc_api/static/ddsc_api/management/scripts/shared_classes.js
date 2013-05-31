@@ -8,11 +8,24 @@ isc.UncachedResultSet.addProperties({
 });
 
 
+function getCookie(name) {
+  var cookie_dict = {};
+  var cookie = document.cookie.split(';');
+  debugger
+  for (var i = 0; i < cookie.length; i++) {
+    var c = cookie[i].split('=');
+    if (c[0] == name) {
+      return c[1];
+    }
+  }
+}
+
 
 function userWarning(title, message, addContactInfo) {
 
   if (addContactInfo) {
      message = message + '<br>Probeer het (later) nog eens. ' +
+        'Controleer of u nog bent ingelogd door de pagina te herladen. ' +
         'Blijft het probleem optreden, neem dan contact op met de helpdesk.'
   }
 
@@ -43,9 +56,11 @@ isc.FilterPaginatedDataSource.addProperties({
   },*/
   resultSetClass: isc.UncachedResultSet,
   transformRequest: function(dsRequest) {
-    dsRequest.httpHeaders = {
-      "Accept" : "application/json"
+    if (typeof(dsRequest.httpHeaders)!='object') {
+      dsRequest.httpHeaders = {};
     }
+
+    dsRequest.httpHeaders["Accept"] = "application/json";
 
     if (typeof(dsRequest.params)!='object') {
       dsRequest.params = {};
@@ -193,8 +208,9 @@ function saveObject(form, data, post_url, options) {
     data: data,
     params: data,
     httpHeaders: {
-      'X-CSRFToken': document.cookie.split('=')[1],
-      'Accept-Language': 'nl'
+      'X-CSRFToken': getCookie('csrftoken'),
+      'Accept-Language': 'nl',
+      "Accept" : "application/json"
     },
     callback: function(rpcResponse, data, rpcRequest) {
       if (rpcResponse.httpResponseCode == 200 || rpcResponse.httpResponseCode == 201) {
@@ -202,13 +218,16 @@ function saveObject(form, data, post_url, options) {
        var data = isc.JSON.decode(data);
         options.setFormData(data);
         if (options.reloadList) {
-          options.reloadList.fetchData({test: timestamp()}); //force new fetch with timestamp
+          options.reloadList.invalidateCache(); //force new fetch with timestamp
         }
         if (rpcResponse.httpResponseCode == 201) {
           //in case of create, the list serializer is used for the return. do extra fetch to get details
           RPCManager.sendRequest({
             actionURL: data.url,
             httpMethod: 'GET',
+            httpHeaders: {
+              "Accept" : "application/json"
+            },
             callback: function(rpcResponse, data, rpcRequest) {
               var data = isc.JSON.decode(data);
               options.setFormData(data);
@@ -218,7 +237,6 @@ function saveObject(form, data, post_url, options) {
       } else if (rpcResponse.httpResponseCode == 400) {
         //show validation errors
         var data = isc.JSON.decode(rpcResponse.httpResponseText);
-        debugger
         form.setErrors(data, true);
 
         if (data && data['__all__']) {
@@ -235,7 +253,11 @@ function saveObject(form, data, post_url, options) {
         userWarning('Validatie', message, false);
       } else {
         //show error message
-        var data = isc.JSON.decode(rpcResponse.httpResponseText);
+        try {
+          var data = isc.JSON.decode(rpcResponse.httpResponseText);
+        } catch (e) {
+          var data = {detail: ' '}
+        }
         var message = 'Fout bij opslaan. '
         if (data && data['detail']) {
           message = message + data['detail']

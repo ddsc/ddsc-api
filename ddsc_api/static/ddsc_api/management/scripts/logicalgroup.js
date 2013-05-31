@@ -4,8 +4,10 @@ var logicalGroupDS = isc.DataSource.create({
   requestProperties: {
     params: {
       management: true,
-      page_size: 1000,
-      format: 'json'
+      page_size: 1000
+    },
+    httpHeaders: {
+      "Accept" : "application/json"
     }
   },
   defaultsNewNodesToRoot: true,
@@ -73,6 +75,8 @@ var logicalGroupTree = isc.TreeGrid.create({
   canAcceptDroppedRecords: true,
   autoFetchData:true,
   loadDataOnDemand:false,
+  sortField: 'name',
+  sortDirection: Array.ASCENDING,
   dataProperties:{
     dataArrived:function (parentNode) {
       this.openAll();
@@ -84,11 +88,11 @@ var logicalGroupTree = isc.TreeGrid.create({
   ],
   rowClick: function(record) {
     RPCManager.sendRequest({
-      httpHeaders: {
-        'Accept': 'application/json'
-      },
       actionURL: record._url,
       httpMethod: 'GET',
+      httpHeaders: {
+        "Accept" : "application/json"
+      },
       callback: function(rpcResponse, data, rpcRequest) {
         var data = isc.JSON.decode(rpcResponse.data);
         setLogicalGroupFormData(data);
@@ -119,6 +123,9 @@ var logicalGroupForm = isc.DynamicForm.create({
           params: {
             page_size: 1000,
             management: true
+          },
+          httpHeaders: {
+            "Accept" : "application/json"
           }
         },
         dataURL: settings.dataowners_url,
@@ -141,6 +148,9 @@ var logicalGroupForm = isc.DynamicForm.create({
           params: {
             page_size: 1000,
             management: true
+          },
+          httpHeaders: {
+            "Accept" : "application/json"
           }
         },
         dataURL: settings.logicalgroups_url,
@@ -179,6 +189,9 @@ var lgTimeseriesDS = isc.FilterPaginatedDataSource.create({
   requestProperties: {
     params: {
       management: true
+    },
+    httpHeaders: {
+      "Accept" : "application/json"
     }
   },
   fields:[
@@ -202,6 +215,8 @@ var lgTimeseries = isc.DefaultListGrid.create({
   dataSource: lgTimeseriesDS,
   canDragRecordsOut: true,
   dragDataAction: 'copy',
+  sortField: 'name',
+  sortDirection: Array.ASCENDING,
   dataProperties:{
     disableCacheSync: true
   },
@@ -281,20 +296,27 @@ logicalGroupPage = isc.HLayout.create({
                     actionURL: logicalGroupForm.getData()['url'],
                     httpMethod: 'DELETE',
                     httpHeaders: {
-                      'X-CSRFToken': document.cookie.split('=')[1]
+                      'X-CSRFToken': getCookie('csrftoken'),
+                      "Accept" : "application/json"
                     },
                     callback: function(rpcResponse, data, rpcRequest) {
                       console.log('verwijderen gelukt');
                       logicalGroupForm.setData([]);
                       logicalGroupForm.setErrors([]);
                       timeseriesSelectionGrid.setData([]);
-                      logicalGroupTree.fetchData({test: timestamp()}); //force new fetch with timestamp
+                      logicalGroupTree.invalidateCache(); //force new fetch with timestamp
                     }
                   });
                 }
               }
             })
           ]
+         }),
+        isc.IButton.create({
+          title: 'Help',
+          click: function() {
+            window.open(settings.doc.logicalgroup_url, "Help");
+          }
         })
       ]
     }),

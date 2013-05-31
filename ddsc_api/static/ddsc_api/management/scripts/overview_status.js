@@ -5,7 +5,7 @@ var statusDS = isc.FilterPaginatedDataSource.create({
   fields:[
     {name: "id", title:"id", hidden: true},
     {name: "url", title:"url", hidden: true},
-    {name: "status_date", title:"Datum"},
+    {name: "date", title:"Datum"},
     {name: "timeseries.name", title:"Naam", width: 150},
     {name: "timeseries.location.name", title:"Locatie Naam", hidden: true},
     {name: "timeseries.parameter", title:"Parameter code"},
@@ -25,12 +25,15 @@ var statusDS = isc.FilterPaginatedDataSource.create({
 var statusList = isc.DefaultListGrid.create({
   width: 900,
   dataSource: statusDS,
-  sortField: 'status_date',
+  sortField: 'date',
   sortDirection: Array.DESCENDING,
   rowClick: function(record) {
     RPCManager.sendRequest({
       actionURL: record.url,
       httpMethod: 'GET',
+      httpHeaders: {
+        "Accept" : "application/json"
+      },
       callback: function(rpcResponse, data, rpcRequest) {
         data = isc.JSON.decode(data);
         statusForm.setData(data);
@@ -48,7 +51,7 @@ var statusForm = isc.DynamicForm.create({
   fields: [
     {type: 'header', defaultValue: "Details Status"},
     {name: "id", width: "*", canEdit: false},
-    {name: "status_date", width: "*"},
+    {name: "date", width: "*"},
     {name: "timeseries.name", width: "*"},
     {name: "timeseries.parameter", width: "*"},
     {name: "nr_of_measurements_total", width: "*"},
@@ -67,6 +70,16 @@ statusPage = isc.HLayout.create({
   membersMargin: 10,
   members: [
     statusList,
-    statusForm
+    isc.VLayout.create({
+      members: [
+        statusForm,
+        isc.IButton.create({
+          title: 'Help',
+          click: function() {
+            window.open(settings.doc.status_overview_url, "Help");
+          }
+        })
+      ]
+    })
   ]
 });

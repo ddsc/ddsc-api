@@ -2,7 +2,8 @@
 
 var base = (domain ? domain : 'http://' + window.location.host);
 var domain = base + '/api/v1/';
-
+var doc = base + '/static_media/ddsc_api/management/data/Beheerdershandleiding - Dijk Data Service Centrum concept v1.3 BR.pdf';
+var user_doc = base + '/static_media/ddsc_api/management/data/Gebruikershandleiding - Dijk Data Service Centrum v1.2.pdf';
 
 var settings = {
     parameters_url: domain + 'parameters/',
@@ -12,7 +13,6 @@ var settings = {
     timeseries_url: domain + 'timeseries/',
     manufacturer_url: domain + 'manufacturer/',
     datasets_url: domain + 'datasets/',
-    //alarms_url: domain + 'alarms/' + extra,
     //collages_url: domain + 'collages/',
     //workspace_url: domain + 'workspaces/',
 	  //layers_url: domain + 'layers/?page_size=100',
@@ -31,7 +31,18 @@ var settings = {
     compartments_url: domain + 'compartments/',
     measuringdevices_url: domain + 'measuringdevices/',
     measuringmethods_url: domain + 'measuringmethods/',
-    processingmethods_url: domain + 'processingmethods/'
-
+    processingmethods_url: domain + 'processingmethods/',
+    doc: {
+      timeseries_url: doc + '#page=20',
+      source_url: doc + '#page=22',
+      logicalgroup_url: doc + '#page=23',
+      upload_url: user_doc + '#page=25',
+      location_url: doc + '#page=21',
+      alarms_url: user_doc + '#page=22',
+      accessgroup_url: doc + '#page=17',
+      alarm_overview_url: user_doc + '#page=25',
+      status_overview_url: user_doc + '#page=25'
+    },
+    template_download_url: 'http://github.com/ddsc/'
 };
 

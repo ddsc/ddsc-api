@@ -53,10 +53,15 @@ var alarmList = isc.ListGrid.create({
   alternateRecordStyles:true,
   autoFetchData: true,
   dataSource: alarmDS,
+  sortField: 'name',
+  sortDirection: Array.ASCENDING,
   rowClick: function(record) {
     RPCManager.sendRequest({
       actionURL: record.url,
       httpMethod: 'GET',
+      httpHeaders: {
+        "Accept" : "application/json"
+      },
       callback: function(rpcResponse, data, rpcRequest) {
         data = isc.JSON.decode(data);
         setAlarmFormData(data);
@@ -186,9 +191,10 @@ var alarmItemForm = isc.DynamicForm.create({
           var data = form.getValues();
           if (data.alarm_type) {
             data.object_id = data[data.alarm_type];
+            data.content_object_name = form.getField(data.alarm_type).getDisplayValue();
           } else
             data.object_id = null;
-
+            data.object_name = null;
           if (form.originalRecord) {
             isc.addProperties(form.originalRecord, data);
             alarmItemList.markForRedraw();
@@ -227,7 +233,8 @@ var alarmItemList = isc.ListGrid.create({
   canRemoveRecords: true,
   fields:[
     {name: "alarm_type", title: "alarm type", type: "text", width:80, valueMap: ['timeseries', 'location', 'logical group']},
-    {name: "object_id", title: "object_id", type: "text", width:50},
+    {name: "object_id", title: "object id", type: "text", width:50},
+    {name: "content_object_name", title: "object naam", type: "text", width:50},
     {name: "id", title:"id", showIf: function() { return false; }},
     {name: "name", title:"Naam", showIf: function() { return false; }},
     {name: 'logical_check', title: 'wat', width: 50},
@@ -359,20 +366,27 @@ alarmPage = isc.HLayout.create({
                     actionURL: alarmForm.getData()['url'],
                     httpMethod: 'DELETE',
                     httpHeaders: {
-                      'X-CSRFToken': document.cookie.split('=')[1]
+                      'X-CSRFToken': getCookie('csrftoken'),
+                      "Accept" : "application/json"
                     },
                     callback: function(rpcResponse, data, rpcRequest) {
                       console.log('verwijderen gelukt');
                       alarmForm.setData([]);
                       alarmForm.setErrors([]);
                       alarmItemList.setData([]);
-                      alarmList.fetchData({test: timestamp()}); //force new fetch with timestamp
+                      alarmList.invalidateCache(); //force new fetch with timestamp
                     }
                   });
                 }
               }
             })
           ]
+        }),
+        isc.IButton.create({
+          title: 'Help',
+          click: function() {
+            window.open(settings.doc.alarms_url, "Help");
+          }
         })
       ]
     })
