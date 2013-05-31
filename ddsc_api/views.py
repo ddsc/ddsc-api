@@ -124,6 +124,7 @@ class Root(APIView):
             ('timeseries', reverse('timeseries-list', request=request)),
             ('logicalgroups', reverse('logicalgroup-list', request=request)),
             ('sources', reverse('source-list', request=request)),
+            ('summary', reverse('summary', request=request)),
         ])
 
         user = getattr(request, 'user', None)
