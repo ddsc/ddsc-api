@@ -197,6 +197,8 @@ CORS_ORIGIN_WHITELIST = [
     'test.dijkdata.nl',
     'ddsc.github.com',
     'www.dijkdata.nl',
+    'portal.ddsc.nl',
+    'test.ddsc.nl',
 ]
 
 SSO_ENABLED = False
