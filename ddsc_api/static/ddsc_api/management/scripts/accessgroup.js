@@ -24,6 +24,54 @@ var accessGroupDS = isc.DataSource.create({
   }
 });
 
+var roleDS = isc.DataSource.create({
+  dataFormat: 'custom',
+  dataURL: settings.roles_url,
+  requestProperties: {
+    params: {
+      page_size: 0
+    },
+    httpHeaders: {
+      "Accept" : "application/json"
+    }
+  },
+  //defaultsNewNodesToRoot: true,
+  fields:[
+    {name: 'id', title: 'Id', type: 'text', canEdit: false, primaryKey: true, hidden: true},
+    {name: 'url', title: 'Url', type: 'text', canEdit: false, hidden: true},
+    {name: 'name', title: 'Naam'}
+  ],
+  transformResponse: function(dsResponse) {
+    var json_data = isc.JSON.decode(dsResponse.data);
+    dsResponse.totalRows = json_data.length;
+    dsResponse.data = json_data;
+  }
+});
+
+var userGroupDS = isc.DataSource.create({
+  dataFormat: 'custom',
+  dataURL: settings.usergroups_url,
+  requestProperties: {
+    params: {
+      page_size: 0
+    },
+    httpHeaders: {
+      "Accept" : "application/json"
+    }
+  },
+  //defaultsNewNodesToRoot: true,
+  fields:[
+    {name: 'id', title: 'Id', type: 'text', canEdit: false, primaryKey: true, hidden: true},
+    {name: 'url', title: 'Url', type: 'text', canEdit: false, hidden: true},
+    {name: 'name', title: 'Naam'}
+  ],
+  transformResponse: function(dsResponse) {
+    var json_data = isc.JSON.decode(dsResponse.data);
+    dsResponse.totalRows = json_data.length;
+    dsResponse.data = json_data;
+  }
+});
+
 var setAgFormData = function(data) {
   agTimeseriesSelectionGrid.setData(data.timeseries);
   agAccessGroupOverview.setData(data.permission_mappers);
@@ -99,10 +147,28 @@ var agAccessGroupOverview = isc.ListGrid.create({
   alternateRecordStyles:true,
   autoFitMaxRecords: 5,
   autoFitData: "vertical",
+  canEdit: true,
+  editEvent: "click",
   fields:[
     {name:"id", title:"id", showIf: "return false"},
-    {name:"user_group", title:"Gebruikersgroep (alleen lezen)"},
-    {name:"permission_group", title:"Rol"},
+    {name:"user_group", title:"Gebruikersgroep (alleen lezen)", editorType: 'DefaultSelectItem', valueField: 'id',
+      displayField:"name",
+      optionDataSource: userGroupDS,
+      pickListFields:[
+        {name: 'id', width: 100},
+        {name: 'name'}
+      ],
+      canFilter: false,
+      width: '*'},
+    {name:"permission_group", title:"Rol", editorType: 'DefaultSelectItem', valueField: 'id',
+      displayField:"name",
+      optionDataSource: roleDS,
+      pickListFields:[
+        {name: 'id', width: 100},
+        {name: 'name'}
+      ],
+      canFilter: false,
+      width: '*'},
     {name:"name", title:"Naam (optioneel)", showIf: "return false"}
   ]
 });
@@ -193,6 +259,28 @@ accessGroupPage = isc.HLayout.create({
       members: [
         accessGroupForm,
         agAccessGroupOverview,
+        isc.HLayout.create({
+          height: 20,
+          members: [
+            isc.IButton.create({
+                title:"Annuleren",
+                click:"agAccessGroupOverview.discardAllEdits()"
+            }),
+            isc.IButton.create({
+              title: 'Nieuw',
+              click: 'agAccessGroupOverview.startEditingNew()'
+            }),
+            isc.IButton.create({
+              title: 'Verwijderen',
+              click: function() {
+                if (agAccessGroupOverview.getSelection().getLength() > 0) {
+                    agAccessGroupOverview.getSelection().map(function (item) {
+                        agAccessGroupOverview.removeData(item);
+                    });
+                }
+              }
+            })
+        ]}),
         agTimeseriesSelectionGrid,
         isc.HLayout.create({
           height: 20,
@@ -218,6 +306,7 @@ accessGroupPage = isc.HLayout.create({
             isc.IButton.create({
               title: 'Opslaan',
               click: function() {
+                agAccessGroupOverview.saveAllEdits();
                 saveAccessGroup(false);
               }
             }),

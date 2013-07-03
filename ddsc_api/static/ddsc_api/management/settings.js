@@ -32,6 +32,8 @@ var settings = {
     measuringdevices_url: domain + 'measuringdevices/',
     measuringmethods_url: domain + 'measuringmethods/',
     processingmethods_url: domain + 'processingmethods/',
+    usergroups_url: domain + 'groups/',
+    roles_url: domain + 'roles/',
     doc: {
       timeseries_url: doc + '#page=20',
       source_url: doc + '#page=22',
