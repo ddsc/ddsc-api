@@ -1,6 +1,6 @@
 
 
-var base = (domain ? domain : 'http://' + window.location.host);
+var base = (domain ? domain : 'https://' + window.location.host);
 var domain = base + '/api/v1/';
 var doc = base + '/static_media/ddsc_api/management/data/Beheerdershandleiding - Dijk Data Service Centrum.pdf';
 var user_doc = base + '/static_media/ddsc_api/management/data/Gebruikershandleiding - Dijk Data Service Centrum.pdf';
