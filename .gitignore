@@ -18,6 +18,9 @@ develop-eggs
 .installed.cfg
 buildout.cfg
 
+# local overrides
+ddsc_api/localsettings.py
+
 # Installer logs
 pip-log.txt
 
