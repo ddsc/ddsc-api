@@ -2,7 +2,7 @@ import os
 
 from lizard_ui.settingshelper import setup_logging
 
-from ddsc_api.settings import *
+from ddsc_api.settings import *  # NOQA
 
 DEBUG = True
 
@@ -23,7 +23,7 @@ DATABASES = {
     # the specified database exists. When the tests cannot run, Jenkins sees
     # that as an error.
     'default': {
-        'NAME': 'ddsc_api',
+        'NAME': 'ddsc',
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'USER': 'buildout',
         'PASSWORD': 'buildout',
