@@ -106,7 +106,7 @@ STATIC_URL = '/static_media/'
 
 # Make this unique, and don't share it with anybody.
 # override me in localsettings
-SECRET_KEY = ''
+SECRET_KEY = 'OVERRIDE_THIS_ON_THE_PRODUCTION_SERVER'
 
 ROOT_URLCONF = 'ddsc_api.urls'
 

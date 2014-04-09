@@ -3,7 +3,16 @@ ddsc-api
 
 Introduction
 ------------
-DDSC-api is the api module for Dike Data Service Centre. A collaboration between Fugro, Stichting IjkDijk and Nelen & Schuurmans.
+
+DDSC-api is the api module for Dike Data Service Centre. A
+collaboration between Fugro, Stichting IjkDijk and Nelen & Schuurmans.
+
+
+Production installation
+-----------------------
+
+Database passwords, and the SECRET_KEY setting, need to be set on the
+production server in "localsettings.py". DON'T use the default settings!
 
 
 Requires
