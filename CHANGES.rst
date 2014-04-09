@@ -5,9 +5,13 @@ Changelog of ddsc-api
 0.5 (unreleased)
 ----------------
 
-- Upgraded Django to 1.5.5 (to solve postgis-2.x-related problems with migrations, amongst other things).
+- Upgraded Django to 1.5.4 (to solve postgis-2.x-related problems with
+  migrations, amongst other things). Not 1.5.5, because that is
+  incompatible with django-staticfiles, which is a requirement of
+  lizard-ui.
 
-- Upgraded lizard-wms and lizard-maptree to versions compatible with Django 1.5.5.
+- Upgraded lizard-wms and lizard-maptree to versions compatible with
+  Django 1.5.4.
 
 - Pinned dependencies to versions currently used in production.
 
