@@ -7,7 +7,6 @@
 # ever put personal settings into this file or into developmentsettings.py!
 
 import os
-import tempfile
 
 import django.conf.global_settings as DEFAULT_SETTINGS
 
@@ -57,7 +56,11 @@ DATABASES = {
     # override me in localsettings
 }
 
-POSTGIS_VERSION = (1,5,3)
+# Any good reason why the postgis version should be hard-coded?
+# In the meanwhile, I will override this in my localsettings,
+# because I like freedom of choice. See: https://docs.djangoproject.com/
+# en/dev/ref/contrib/gis/testing/#postgis-version
+POSTGIS_VERSION = (1, 5, 3)
 
 # Almost always set to 1.  Django allows multiple sites in one database.
 SITE_ID = 1
@@ -93,7 +96,9 @@ STATIC_ROOT = os.path.join(BUILDOUT_DIR, 'var', 'static')
 # trailing slash if there is a path component (optional in other cases).
 MEDIA_URL = '/media/'
 ANNOTATION_ATTACHMENTS_DIRNAME = 'annotation_attachments'
-ANNOTATION_ATTACHMENTS_DIR = os.path.join(MEDIA_ROOT, ANNOTATION_ATTACHMENTS_DIRNAME)
+ANNOTATION_ATTACHMENTS_DIR = os.path.join(
+    MEDIA_ROOT, ANNOTATION_ATTACHMENTS_DIRNAME
+)
 # URL for the per-application /media static files collected by
 # django-staticfiles.  Use it in templates like
 # "{{ MEDIA_URL }}mypackage/my.css".
@@ -117,7 +122,8 @@ CACHES = {
 
 MIDDLEWARE_CLASSES = (
     # Gzip needs to be at the top.
-    # Disabled GZIP due to it interfering with direct downloads (/annotations/files/)
+    # Disabled GZIP due to it interfering with
+    # direct downloads (/annotations/files/)
     #'django.middleware.gzip.GZipMiddleware',
     # Below is the default list, don't modify it.
     'django.middleware.locale.LocaleMiddleware',
@@ -149,7 +155,7 @@ INSTALLED_APPS = (
     'lizard_map',
     'lizard_maptree',
     'lizard_wms',
-    'ddsc_site', # depends on lizard_wms & lizard_security
+    'ddsc_site',  # depends on lizard_wms & lizard_security
     'rest_framework',
     'south',
     'compressor',
@@ -228,7 +234,7 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 AUTH_PROFILE_MODULE = 'ddsc_site.UserProfile'
 
-SESSION_COOKIE_AGE = 60*60*12 # 12 hours
+SESSION_COOKIE_AGE = 60*60*12  # 12 hours
 
 try:
     # For local production overrides (DB passwords, for instance)
