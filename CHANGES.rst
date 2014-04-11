@@ -10,10 +10,12 @@ Changelog of ddsc-api
   incompatible with django-staticfiles, which is a requirement of
   lizard-ui.
 
-- Upgraded lizard-wms and lizard-maptree to versions compatible with
-  Django 1.5.4.
+- Upgraded lizard-wms, lizard-auth-client and lizard-maptree to
+  versions compatible with Django 1.5.4.
 
 - Pinned dependencies to versions currently used in production.
+
+- Small changes to deal with the Django version update.
 
 
 0.4 (2012-11-16)
