@@ -3,8 +3,9 @@ from django.conf.urls.defaults import include
 from django.conf.urls.defaults import patterns
 from django.conf.urls.defaults import url
 from django.contrib import admin
-from django.views.generic.simple import redirect_to
+from django.views.generic import RedirectView
 from lizard_ui.urls import debugmode_urlpatterns
+
 
 from .views import Root, ManagementView, CSVUploadView
 
@@ -12,8 +13,8 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    url(r'^$', redirect_to, {'url': 'api/v1'}),
-    url(r'^api$', redirect_to, {'url': 'api/v1'}),
+    url(r'^$', RedirectView.as_view(url='api/v1')),
+    url(r'^api$', RedirectView.as_view(url='api/v1')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/v1/$', Root.as_view()),
 
