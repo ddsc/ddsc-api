@@ -28,6 +28,7 @@ install_requires = [
     'python-magic',
     'python-memcached',
     'raven',
+    'requests',
     'tslib',
     'werkzeug',
     ],
