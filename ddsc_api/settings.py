@@ -236,6 +236,8 @@ AUTH_PROFILE_MODULE = 'ddsc_site.UserProfile'
 
 SESSION_COOKIE_AGE = 60*60*12  # 12 hours
 
+GEOSERVER_REST_ENDPOINT = 'https://maps.ddsc.nl/geoserver/rest/'
+
 try:
     # For local production overrides (DB passwords, for instance)
     from ddsc_api.localsettings import *  # NOQA
