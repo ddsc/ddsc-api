@@ -41,6 +41,9 @@ DEBUG = False
 # is set to True.
 TEMPLATE_DEBUG = True
 
+# Prevent 500 error with DEBUG = False:
+ALLOWED_HOSTS = ["api.ddsc.nl"]
+
 # ADMINS get internal error mails, MANAGERS get 404 mails.
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
