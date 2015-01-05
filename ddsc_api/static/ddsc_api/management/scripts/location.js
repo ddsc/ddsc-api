@@ -21,7 +21,8 @@ var locationDS = isc.FilterPaginatedDataSource.create({
     {name:"owner", title:"eigenaar"},
     {name:"show_on_map", title:"toon op kaart", type: "boolean", canFilter: false},
     {name:"srid", title:"SRID", valueMap: {28992: 'Rijksdriehoek', 4326: 'WGS84', 4258: 'ETRS89'}, hidden: true},
-    {name:"geometry_precision", title:"geometrie precisie", hidden: true}
+    {name:"geometry_precision", title:"geometrie precisie", hidden: true},
+    {name:"icon_url", title:"icon url", hidden: true}
   ]
 });
 
@@ -56,7 +57,7 @@ var locationForm = isc.DynamicForm.create({
     {name:"name", width: '*'},
     {name:"description", type: 'TextArea', width: '*'},
     {
-      name: 'owner', title: 'Data eigenaar', type: 'combo',
+      name: 'owner', title: 'data eigenaar', type: 'combo',
       width: '*',
       valueField: 'name', displayField: 'name',
       optionDataSource: isc.DataSource.create({
@@ -81,7 +82,19 @@ var locationForm = isc.DynamicForm.create({
     {name:"show_on_map", width: '*'},
     {name:"point_geometry", width: '*'},
     {name:"srid"},
-    {name:"geometry_precision", type: 'spinner'}
+    {name:"geometry_precision", type: 'spinner'},
+    {
+	name: "icon_url",
+	type: "select",
+	emptyDisplayValue: "Selecteer icon",
+	title: "icon",
+	change: "console.log('changed');",
+	imageURLSuffix:".png",
+	imageURLPrefix: base + "/" + appImagesUrl,
+	valueMap: locationIconValueMap,	
+	valueIcons: locationIconValueMap,
+	width: '*'
+    }
   ]
 });
 

@@ -16,7 +16,8 @@ Changelog of ddsc-api
 - Pinned dependencies to versions currently used in production.
 
 - Small changes to deal with the Django version update.
-
+- Added drop-down field to location form. 
+- Added the hard coded list with paths to location icons to settings.js
 
 0.4 (2012-11-16)
 ----------------

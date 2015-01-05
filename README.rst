@@ -52,3 +52,8 @@ e.g. create a postgis db: ddsc and point ddsc-core, ddsc-site etc towards that d
 If you run in to gist_geometry_ops problems this is because postgis 2.0 has a 
 slightly different setup, run this::
     psql -d ddsc -f /usr/share/postgresql/9.1/contrib/postgis-2.1/legacy_gist.sql
+
+
+Location-icons
+--------------
+The URL of location-icons are hardcoded in settings.js 
