@@ -4,26 +4,26 @@ var base = (domain ? domain : 'https://' + window.location.host);
 var domain = base + '/api/v1/';
 var doc = base + '/static_media/ddsc_api/management/data/Beheerdershandleiding - Dijk Data Service Centrum.pdf';
 var user_doc = base + '/static_media/ddsc_api/management/data/Gebruikershandleiding - Dijk Data Service Centrum.pdf';
-var appImagesUrl = "static_media/app/images/";
+var appImagesUrl = "https://portal.ddsc.nl/app/images/";
 var locationIconValueMap = {
-    "app/images/beautifulview.png": "beautifulview",
-    "app/images/icon-ddsc-alizarin.png": "icon-ddsc-alizarin",
-    "app/images/icon-ddsc-amethyst.png": "icon-ddsc-amethyst",
-    "app/images/icon-ddsc-belizehole.png": "icon-ddsc-belizehole",
-    "app/images/icon-ddsc-carrot.png": "icon-ddsc-carrot",
-    "app/images/icon-ddsc-emerald.png": "icon-ddsc-emerald",
-    "app/images/icon-ddsc-greensea.png": "icon-ddsc-greensea",
-    "app/images/icon-ddsc-nephritis.png": "icon-ddsc-nephritis",
-    "app/images/icon-ddsc-peterriver.png": "icon-ddsc-peterriver",
-    "app/images/icon-ddsc-sunflower.png": "icon-ddsc-sunflower",
-    "app/images/icon-ddsc-wetasphalt.png": "icon-ddsc-wetasphalt",
-    "app/images/icon-ddsc-wisteria.png": "icon-ddsc-wisteria",
-    "app/images/marker-dam-1.png": "marker-dam-1",
-    "app/images/marker-dam-2.png": "marker-dam-2",
-    "app/images/marker-dam-3-annotations.png": "marker-dam-3-annotations",
-    "app/images/marker-dam-3.png": "marker-dam-3",
-    "app/images/marker-shore-white.png": "marker-shore-white",
-    "app/images/marker-watertemperature-green.png": "marker-watertemperature-green"
+    "/app/images/beautifulview.png": "beautifulview",
+    "/app/images/icon-ddsc-alizarin.png": "icon-ddsc-alizarin",
+    "/app/images/icon-ddsc-amethyst.png": "icon-ddsc-amethyst",
+    "/app/images/icon-ddsc-belizehole.png": "icon-ddsc-belizehole",
+    "/app/images/icon-ddsc-carrot.png": "icon-ddsc-carrot",
+    "/app/images/icon-ddsc-emerald.png": "icon-ddsc-emerald",
+    "/app/images/icon-ddsc-greensea.png": "icon-ddsc-greensea",
+    "/app/images/icon-ddsc-nephritis.png": "icon-ddsc-nephritis",
+    "/app/images/icon-ddsc-peterriver.png": "icon-ddsc-peterriver",
+    "/app/images/icon-ddsc-sunflower.png": "icon-ddsc-sunflower",
+    "/app/images/icon-ddsc-wetasphalt.png": "icon-ddsc-wetasphalt",
+    "/app/images/icon-ddsc-wisteria.png": "icon-ddsc-wisteria",
+    "/app/images/marker-dam-1.png": "marker-dam-1",
+    "/app/images/marker-dam-2.png": "marker-dam-2",
+    "/app/images/marker-dam-3-annotations.png": "marker-dam-3-annotations",
+    "/app/images/marker-dam-3.png": "marker-dam-3",
+    "/app/images/marker-shore-white.png": "marker-shore-white",
+    "/app/images/marker-watertemperature-green.png": "marker-watertemperature-green"
 };
 
 var settings = {

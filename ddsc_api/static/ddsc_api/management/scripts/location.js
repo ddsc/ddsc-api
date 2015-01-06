@@ -90,7 +90,7 @@ var locationForm = isc.DynamicForm.create({
 	title: "icon",
 	change: "console.log('changed');",
 	imageURLSuffix:".png",
-	imageURLPrefix: base + "/" + appImagesUrl,
+	imageURLPrefix: appImagesUrl,
 	valueMap: locationIconValueMap,	
 	valueIcons: locationIconValueMap,
 	width: '*'
